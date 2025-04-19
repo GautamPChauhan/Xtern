@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management System - Company Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        :root{
+            --left-color:#14213d;
+            --right-color:#FFF6E8;
+            --text-color:#444;
+            --gradient:linear-gradient(#c1121f,#780000);
+            --sidebar-width: 250px;
+            --accent-color: #fca311;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #000;
+            overflow-x: hidden;
+        }
+
+        .background-split {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .left-side {
+            width: 60%;
+            background-color: var(--left-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: slideDisappear 1.5s ease-in-out forwards;
+        }
+
+        .right-side {
+            width: 40%;
+            background-color:var(--right-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            animation: slideExpand 1.5s ease-in-out forwards;
+        }
+
+        @keyframes slideDisappear {
+            0% {
+                width: 50%;
+                opacity: 1;
+            }
+            100% {
+                width: 0%;
+                opacity: 0; 
+                display: none;
+            }
+        }
+
+        @keyframes slideExpand {
+            0% {
+                width: 50%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        /* Vertical Navbar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px; /* Start off-screen - using fixed width instead of var for better compatibility */
+            width: 350px;
+            height: 100%;
+            background-color: var(--left-color);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar.active {
+            left: 0; /* Move on-screen when active */
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Toggle Button */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--left-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .menu-toggle span {
+            position: relative;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span::before,
+        .menu-toggle span::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span::before {
+            transform: translateY(-6px);
+        }
+
+        .menu-toggle span::after {
+            transform: translateY(6px);
+        }
+
+        .menu-toggle.active span {
+            background-color: transparent;
+        }
+
+        .menu-toggle.active span::before {
+            transform: translateY(0) rotate(45deg);
+        }
+
+        .menu-toggle.active span::after {
+            transform: translateY(0) rotate(-45deg);
+        }
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            display: block;
+        }
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Main Content: Split into two columns */
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Split layout styling */
+        .home-container {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        #leftsidehome {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #rightsidehome {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Common styles */
+        .content h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #333;
+            width: 100%;
+            text-align: center;
+        }
+
+        .content p {
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        #xtern {
+            color: #0057b3;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .buttons a {
+            padding: 12px 20px;
+            background: #14213d;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .buttons a i {
+            margin-right: 8px;
+        }
+
+        .buttons a:hover {
+            background: #0057b3;
+        }
+
+        /* Login Button */
+        .login-btn {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff !important;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            background: #14213d;
+            overflow: hidden;
+        }
+
+        .login-btn::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            border-radius: 5px;
+            border: 2px solid transparent;
+            background: linear-gradient(90deg, #00b4d8, #1e1e1e, #00b4d8, #1e1e1e, #00b4d8);
+            background-size: 300% 300%;
+            animation: snake-border 2s linear infinite;
+            z-index: -1;
+        }
+
+        .login-btn::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            background: #14213d;
+            border-radius: 5px;
+            z-index: -1;
+        }
+
+        @keyframes snake-border {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Features section styling */
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0 40px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Call to action section */
+        .cta-section {
+            margin: 20px 0;
+            padding: 30px;
+            background: linear-gradient(to right, #14213d, #1e3a8a);
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            width: 100%;
+        }
+
+        .cta-section h3 {
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .cta-section .btn {
+            background: var(--accent-color);
+            color: #14213d;
+            font-weight: bold;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+            font-size: 16px;
+        }
+
+        .cta-section .btn:hover {
+            background: #ffb703;
+        }
+
+        .logoimage img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 120px;
+            margin: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--left-color);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+      
+
+        /* Recent jobs section */
+        .recent-jobs {
+            width: 100%;
+            margin: 30px 0;
+        }
+
+        .recent-jobs h3 {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .job-listing {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .job-header {
+            background: var(--left-color);
+            color: white;
+            padding: 15px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .job-status {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: var(--accent-color);
+            color: var(--left-color);
+        }
+
+        .job-details {
+            padding: 15px;
+        }
+
+        .job-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .job-stat {
+            display: flex;
+            align-items: center;
+        }
+
+        .job-stat i {
+            margin-right: 5px;
+            color: var(--accent-color);
+        }
+
+        /* Quick actions section */
+        .quick-actions {
+            width: 100%;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .quick-actions h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: var(--left-color);
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        .action-btn i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        /*search bar*/
+        .search-container {
+            width: 100%;
+            margin: 20px 0 30px;
+        }
+    
+        .search-wrapper {
+            display: flex;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .search-wrapper:hover, 
+        .search-wrapper:focus-within {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .search-wrapper input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            background: white;
+        }
+        
+        .search-wrapper input::placeholder {
+            color: #aaa;
+        }
+        
+        .search-wrapper button {
+            background: var(--left-color);
+            border: none;
+            color: white;
+            padding: 0 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .search-wrapper button:hover {
+            background: var(--accent-color);
+            color: var(--left-color);
+        }
+        
+        .search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .search-tag {
+            background: #f0f0f0;
+            color: #555;
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .search-tag:hover {
+            background: var(--accent-color);
+            color: var(--left-color);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .home-container {
+                flex-direction: column;
+            }
+            
+            #leftsidehome, #rightsidehome {
+                width: 100%;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature-card {
+                width: 90%;
+                max-width: 350px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+
+            .stats-section {
+                justify-content: center;
+            }
+
+            .stat-card {
+                min-width: 120px;
+                margin: 5px;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .search-wrapper {
+                border-radius: 8px;
+            }
+            
+            .search-tags {
+                justify-content: flex-start;
+                padding: 0 10px;
+            }
+        }
+       
+       
+ /* Update the colors for the main layout */
+.left-side {
+    width: 60%;
+    background-color: var(--left-color); /* Changed from var(--left-color) to white */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: slideDisappear 1.5s ease-in-out forwards;
+}
+
+.right-side {
+    width: 40%;
+    background-color: var(--right-color); /* Changed from var(--right-color) to white */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    animation: slideExpand 1.5s ease-in-out forwards;
+}
+
+/* Update backgrounds for the split layout divs to provide contrast */
+#leftsidehome {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    background-color: #f8f9fa; /* Changed from white to light gray */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center; /* Center text content */
+}
+
+#rightsidehome {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    background-color: #f8f9fa; /* Changed from white to light gray */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center; /* Center text content */
+}
+
+/* Improve centering for stats section */
+.stats-section {
+    display: flex;
+    justify-content: center; /* Changed from space-between to center */
+    width: 100%;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    gap: 15px; /* Added gap for proper spacing */
+}
+
+/* Adjust job listings to maintain readability with centered text */
+.job-listing {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 15px;
+    text-align: left; /* Keep job listings left-aligned for readability */
+}
+
+/* Center job stats while maintaining space between */
+.job-stats {
+    display: flex;
+    justify-content: space-around; /* Changed from space-between to space-around */
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Center the quick actions header and buttons */
+.quick-actions {
+    width: 100%;
+    background: #f0f0f0; /* Slightly darker than parent for contrast */
+    padding: 20px;
+    border-radius: 10px;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center; /* Center the action buttons */
+}
+
+/* Center search elements */
+.search-container {
+    width: 100%;
+    margin: 20px 0 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Ensure responsive centering adjustments */
+@media (max-width: 768px) {
+    .stats-section {
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        min-width: 120px;
+        margin: 5px;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+    
+    .search-tags {
+        justify-content: center; /* Changed from flex-start to center */
+        padding: 0 10px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="menu-toggle">
+        <span></span>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Company Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="user-details">
+                <h4>TechCorp Inc.</h4>
+                <p>Premium Member</p>
+            </div>
+        </div>
+        <nav>
+            <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="#"><i class="fas fa-briefcase"></i> Post Jobs</a>
+            <a href="#"><i class="fas fa-users"></i> Applications</a>
+            <a href="#"><i class="fas fa-comment-dots"></i> Messages</a>
+            <a href="#"><i class="fas fa-user-tie"></i> Profile</a>
+            <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+        </nav>
+    </div>
+
+    <div class="background-split">
+        <div class="left-side">
+            <div class="logoimage">
+                <img src="/api/placeholder/400/320" alt="Company Logo">
+            </div>
+        </div>
+        
+        <div class="right-side">
+            <main class="body">
+                <div class="content">
+                   
+                    <!-- Two-column layout container -->
+                    <div class="home-container">
+                        <!-- Left Side of Homepage -->
+                        <div id="leftsidehome">
+                            <h2>Welcome to <span id="xtern">Xtern</span></h2>
+                    <p>Your one-stop platform for finding top talent</p>
+                            
+                            <div class="buttons">
+                                <a href="#"><i class="fas fa-plus-circle"></i> Post New Opportunity</a>
+                                <a href="#"><i class="fas fa-user-graduate"></i> View Applicants</a>
+                            </div>
+                            
+                            <div class="search-container">
+                                <div class="search-wrapper">
+                                    <input type="text" placeholder="Search for candidates, positions, or skills...">
+                                    <button type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <div class="search-tags">
+                                    <span class="search-tag">Software Development</span>
+                                    <span class="search-tag">Marketing</span>
+                                    <span class="search-tag">Data Science</span>
+                                    <span class="search-tag">Design</span>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-actions">
+                                <h3>Quick Actions</h3>
+                                <div class="action-buttons">
+                                    <a href="#" class="action-btn"><i class="fas fa-file-alt"></i> Generate Report</a>
+                                    <a href="#" class="action-btn"><i class="fas fa-envelope"></i> Message Candidates</a>
+                                    <a href="#" class="action-btn"><i class="fas fa-calendar-alt"></i> Schedule Interviews</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Side of Homepage -->
+                        <div id="rightsidehome">
+                            
+
+                            <div class="recent-jobs">
+                                <h3>Your Recent Listings</h3>
+                                <div class="job-listing">
+                                    <div class="job-header">
+                                        <span>Software Development Intern</span>
+                                        <span class="job-status">Active</span>
+                                    </div>
+                                    <div class="job-details">
+                                        <p>Full-stack development position for a talented CS student</p>
+                                        <div class="job-stats">
+                                            <div class="job-stat"><i class="fas fa-users"></i> 42 Applicants</div>
+                                            <div class="job-stat"><i class="fas fa-calendar"></i> 5 days left</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="job-listing">
+                                    <div class="job-header">
+                                        <span>Marketing Assistant</span>
+                                        <span class="job-status">Active</span>
+                                    </div>
+                                    <div class="job-details">
+                                        <p>Creative marketing position with focus on digital campaigns</p>
+                                        <div class="job-stats">
+                                            <div class="job-stat"><i class="fas fa-users"></i> 28 Applicants</div>
+                                            <div class="job-stat"><i class="fas fa-calendar"></i> 12 days left</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                           
+                        </div>
+                    </div>
+                    
+                    <!-- Sections below the two columns -->
+                    
+                    
+                    
+                </div>
+            </main>
+        </div>
+    </div>
+
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get elements
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            // Make sure sidebar is initially closed (redundant but good practice)
+            sidebar.classList.remove('active');
+            menuToggle.classList.remove('active');
+            overlay.classList.remove('active');
+            
+            // Toggle menu
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            // Close sidebar when clicking on overlay
+            overlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+            });
+            
+            // Close sidebar when clicking on a nav link
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            });
+
+            // Set up testimonial rotation if there were multiple testimonials
+            // This is placeholder code for future expansion
+            let testimonialIndex = 0;
+            const testimonials = document.querySelectorAll('.testimonial');
+            
+            if (testimonials.length > 1) {
+                setInterval(() => {
+                    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+                    document.querySelector('.testimonial-container').style.transform = `translateX(-${testimonialIndex * 100}%)`;
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
