@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management System - Admin Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        :root{
+            --left-color:#14213d;
+            --right-color:#FFF6E8;
+            --text-color:#444;
+            --gradient:linear-gradient(#c1121f,#780000);
+            --sidebar-width: 250px;
+            --accent-color: #fca311;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #000;
+            overflow-x: hidden;
+        }
+
+        .background-split {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .left-side {
+            width: 60%;
+            background-color: var(--left-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: slideDisappear 1.5s ease-in-out forwards;
+        }
+
+        .right-side {
+            width: 40%;
+            background-color:var(--right-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            animation: slideExpand 1.5s ease-in-out forwards;
+        }
+
+        @keyframes slideDisappear {
+            0% {
+                width: 50%;
+                opacity: 1;
+            }
+            100% {
+                width: 0%;
+                opacity: 0; 
+                display: none;
+            }
+        }
+
+        @keyframes slideExpand {
+            0% {
+                width: 50%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        /* Vertical Navbar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px; /* Start off-screen - using fixed width instead of var for better compatibility */
+            width: 350px;
+            height: 100%;
+            background-color: var(--left-color);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar.active {
+            left: 0; /* Move on-screen when active */
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Toggle Button */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--left-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .menu-toggle span {
+            position: relative;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span::before,
+        .menu-toggle span::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span::before {
+            transform: translateY(-6px);
+        }
+
+        .menu-toggle span::after {
+            transform: translateY(6px);
+        }
+
+        .menu-toggle.active span {
+            background-color: transparent;
+        }
+
+        .menu-toggle.active span::before {
+            transform: translateY(0) rotate(45deg);
+        }
+
+        .menu-toggle.active span::after {
+            transform: translateY(0) rotate(-45deg);
+        }
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            display: block;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Main Content: Split into two columns */
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Split layout styling */
+        .home-container {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .heading{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: var(--left-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            margin:20px;
+            height: 100px;
+        }
+        #leftsidehome {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 500px;
+            height: fit-content;;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        #rightsidehome {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 500px;
+            height: 800px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* Common styles */
+        .content h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--right-color);
+            width: 100%;
+            text-align: center;
+        }
+
+        .content p {
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        #xtern {
+            color: #0057b3;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .buttons a {
+            padding: 12px 20px;
+            background: #14213d;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .buttons a i {
+            margin-right: 8px;
+        }
+
+        .buttons a:hover {
+            background: #0057b3;
+        }
+
+        .pending-company-card {
+            background: #ffffff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .pending-company-card:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .company-info {
+            flex: 1 1 60%;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex: 1 1 30%;
+            justify-content: flex-end;
+        }
+        
+        .admin-actions form {
+            display: inline;
+        }
+        
+        .btn-approve, .btn-reject {
+            padding: 8px 16px;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-approve {
+            background-color: #28a745;
+        }
+        
+        .btn-reject {
+            background-color: #dc3545;
+        }
+        
+        .btn-approve:hover {
+            background-color: #218838;
+        }
+        
+        .btn-reject:hover {
+            background-color: #c82333;
+        }
+        
+        .no-pending-msg {
+            font-style: italic;
+            color: #777;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="menu-toggle">
+        <span></span>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="user-details">
+                <h4>Admin User</h4>
+                <p>System Administrator</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('view_companies') }}"><i class="fas fa-building"></i> Approved Companies</a>
+            <a href="{{ url_for('view_applicants') }}"><i class="fas fa-user-graduate"></i> Applicants</a>
+            <a href="{{ url_for('pending_companies') }}"><i class="fas fa-check-circle"></i> Pending Companies</a>
+            <a href="{{ url_for('analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{ url_for('reports') }}"><i class="fas fa-file-alt"></i> Reports</a>
+            <a href="{{ url_for('logout') }}"><i class="fas fa-cog"></i> Log Out</a>
+        </nav>    
+    </div>
+
+    <div class="background-split">
+        <div class="left-side">
+            <div class="logoimage">
+                <img src="biglogo.png" alt="Admin Logo">
+            </div>
+        </div>
+        
+        <div class="right-side">
+            <main class="body">
+                <div class="content">
+                    <div class="heading">
+                        <div>
+                        <h2>Admin Dashboard - <span id="xtern">Xtern</span></h2>
+                        </div>
+                    </div>
+                    <!-- Two-column layout container -->
+                    <div class="home-container">
+                        <!-- Left Side of Homepage -->
+                        <div id="leftsidehome">
+                        
+                            <h3>Requests from new companies</h3>
+                            {% if pending_companies %}
+                                {% for request in pending_companies %}
+                                    <div class="pending-company-card">
+                                        <div class="company-info">
+                                            <h4>{{ loop.index }}. {{ request.company_name }}</h4>
+                                            <p><strong>Industry:</strong> {{ request.industry }}</p>
+                                            <p><strong>Email:</strong> {{ request.email }}</p>
+                                            <p><strong>Contact Person:</strong> {{ request.contact_person }}</p>
+                                            <p><strong>Contact Number:</strong> {{ request.contact_no }}</p>
+                                            <p><strong>Website:</strong> 
+                                                <a href="{{ request.website_url }}" target="_blank">{{ request.website_url }}</a>
+                                            </p>
+                                        </div>
+                                        <div class="admin-actions">
+                                            <form method="POST" action="{{ url_for('handle_company_approval', company_id=request.company_id, action='approve') }}">
+                                                <button type="submit" class="btn-approve">Approve</button>
+                                            </form>
+                                            <form method="POST" action="{{ url_for('handle_company_approval', company_id=request.company_id, action='reject') }}">
+                                                <button type="submit" class="btn-reject">Reject</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="no-pending-msg">No pending requests.</p>
+                            {% endif %}
+
+
+                            
+                        </div>
+                        
+                        
+                       
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get elements
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            // Make sure sidebar is initially closed (redundant but good practice)
+            sidebar.classList.remove('active');
+            menuToggle.classList.remove('active');
+            overlay.classList.remove('active');
+            
+            // Toggle menu
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            // Close sidebar when clicking on overlay
+            overlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+            });
+            
+            // Close sidebar when clicking on a nav link
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            });
+
+            // Action buttons functionality - placeholders for actual implementation
+            document.querySelectorAll('.btn-approve').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const listingElement = this.closest('.request-listing');
+                    listingElement.style.opacity = '0.5';
+                    setTimeout(() => {
+                        listingElement.style.display = 'none';
+                    }, 500);
+                });
+            });
+
+            document.querySelectorAll('.btn-reject').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const listingElement = this.closest('.request-listing');
+                    listingElement.style.opacity = '0.5';
+                    setTimeout(() => {
+                        listingElement.style.display = 'none';
+                    }, 500);
+                });
+            });
+        });
+        
+    </script>
+</body>
+</html>
