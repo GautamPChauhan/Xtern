@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management System - Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        :root{
+            --left-color:#14213d;
+            --right-color:#FFF6E8;
+            --text-color:#444;
+            --gradient:linear-gradient(#c1121f,#780000);
+            --sidebar-width: 250px;
+            --accent-color: #fca311;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: auto;
+            color: #000;
+            overflow-x: hidden;
+        }
+
+        .background-split {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .left-side {
+            width: 60%;
+            background-color: var(--left-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: slideDisappear 1.5s ease-in-out forwards;
+        }
+
+        .right-side {
+            width: 40%;
+            background-color: var(--right-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            animation: slideExpand 1.5s ease-in-out forwards;
+        }
+
+        @keyframes slideDisappear {
+            0% { width: 50%; opacity: 1; }
+            100% { width: 0%; opacity: 0; display: none; }
+        }
+
+        @keyframes slideExpand {
+            0% { width: 50%; }
+            100% { width: 100%; }
+        }
+
+        /* Vertical Navbar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100%;
+            background-color: var(--left-color);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Toggle Button */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--left-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .menu-toggle span {
+            position: relative;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span::before,
+        .menu-toggle span::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span::before {
+            transform: translateY(-6px);
+        }
+
+        .menu-toggle span::after {
+            transform: translateY(6px);
+        }
+
+        .menu-toggle.active span {
+            background-color: transparent;
+        }
+
+        .menu-toggle.active span::before {
+            transform: translateY(0) rotate(45deg);
+        }
+
+        .menu-toggle.active span::after {
+            transform: translateY(0) rotate(-45deg);
+        }
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            display: block;
+        }
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Main Content: Split into two columns */
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: auto;
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            height: auto;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Split layout styling */
+        .home-container {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 30px;
+            height: 1700px;
+        }
+        .heading{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: var(--left-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            margin:20px;
+            height: 100px;
+        }
+        #leftsidehome {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-width: 500px;
+            height: 800px;
+            padding: 10px;
+            background-color: var(--right-color);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #rightsidehome {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-width: 500px;
+            height: 800px;
+            padding: 10px;
+            background-color: var(--right-color);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Common styles */
+        .content h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--right-color);
+            width: 100%;
+            text-align: center;
+        }
+
+        .content p {
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        #xtern {
+            color: var(--accent-color);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .buttons a {
+            padding: 12px 20px;
+            background: #14213d;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .buttons a i {
+            margin-right: 8px;
+        }
+
+        .buttons a:hover {
+            background: #0057b3;
+        }
+
+        /* Features section styling */
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0 40px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Search bar */
+        .search-container {
+            width: 100%;
+            margin: 20px 0 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .search-wrapper {
+            display: flex;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .search-wrapper:hover, 
+        .search-wrapper:focus-within {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .search-wrapper input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            background: white;
+        }
+        
+        .search-wrapper input::placeholder {
+            color: #aaa;
+        }
+        
+        .search-wrapper button {
+            background: var(--left-color);
+            border: none;
+            color: white;
+            padding: 0 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .search-wrapper button:hover {
+            background: var(--accent-color);
+            color: var(--left-color);
+        }
+        
+        .search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .search-tag {
+            background: #f0f0f0;
+            color: #555;
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .search-tag:hover {
+            background: var(--accent-color);
+            color: var(--left-color);
+        }
+
+        /* Application Status Section */
+        .application-status {
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .application-status h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--left-color);
+            color: white;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending { background-color: #ffc107; color: #212529; }
+        .status-interview { background-color: var(--accent-color); color: var(--left-color); }
+        .status-accepted { background-color: #28a745; color: white; }
+        .status-rejected { background-color: #dc3545; color: white; }
+
+        .status-details { padding: 15px; }
+        .status-details p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .status-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; }
+        .status-meta-item { display: flex; align-items: center; }
+        .status-meta-item i { margin-right: 5px; color: var(--accent-color); }
+        .status-progress { margin-top: 10px; }
+        .progress-bar { height: 10px; background-color: #e9ecef; border-radius: 5px; overflow: hidden; margin-bottom: 5px; }
+        .progress-fill { height: 100%; border-radius: 5px; transition: width 0.3s ease; }
+        .progress-pending { width: 25%; background-color: #ffc107; }
+        .progress-interview { width: 50%; background-color: var(--accent-color); }
+        .progress-accepted { width: 100%; background-color: #28a745; }
+        .progress-rejected { width: 100%; background-color: #dc3545; }
+        .progress-steps { display: flex; justify-content: space-between; font-size: 0.7rem; color: #6c757d; }
+
+        /* Recommended Internships Section */
+        .recommended-internships {
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .recommended-internships h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .internship-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .internship-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .internship-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--left-color);
+            color: white;
+        }
+
+        .internship-company { font-weight: 500; }
+        .internship-match { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background-color: var(--accent-color); color: var(--left-color); }
+
+        .internship-details { padding: 15px; }
+        .internship-title { font-size: 1.1rem; font-weight: 500; color: #333; margin-bottom: 10px; }
+        .internship-info { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .internship-info-item { display: flex; align-items: center; font-size: 0.85rem; color: #555; }
+        .internship-info-item i { margin-right: 5px; color: var(--accent-color); }
+        .internship-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .internship-tag { padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; background-color: #f0f0f0; color: #555; }
+
+        .internship-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .internship-deadline { font-size: 0.8rem; color: #6c757d; }
+        .internship-actions { display: flex; gap: 10px; }
+        .btn-apply { padding: 6px 15px; border: none; border-radius: 4px; background-color: var(--accent-color); color: var(--left-color); font-weight: 500; cursor: pointer; transition: background-color 0.3s; }
+        .btn-apply:hover { background-color: #e69500; }
+        .btn-save { padding: 6px 15px; border: 1px solid var(--left-color); border-radius: 4px; background-color: transparent; color: var(--left-color); font-weight: 500; cursor: pointer; transition: all 0.3s; }
+        .btn-save:hover { background-color: var(--left-color); color: white; }
+
+        /* Recent Activities Section */
+        .recent-activities {
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .recent-activities h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 10px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .activity-application { background-color: var(--accent-color); }
+        .activity-view { background-color: var(--left-color); }
+        .activity-update { background-color: #28a745; }
+
+        .activity-content { flex: 1; }
+        .activity-text { font-size: 0.9rem; color: #333; margin-bottom: 5px; }
+        .activity-text span { font-weight: 500; }
+        .activity-time { font-size: 0.75rem; color: #6c757d; }
+
+        /* Calendar Section */
+        .calendar-section {
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-section h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-title { font-weight: 500; color: #333; }
+        .calendar-nav { display: flex; gap: 10px; }
+        .calendar-nav button { border: none; background: none; cursor: pointer; color: var(--left-color); transition: color 0.3s; }
+        .calendar-nav button:hover { color: var(--accent-color); }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day-name {
+            text-align: center;
+            font-weight: 500;
+            color: #6c757d;
+            padding: 5px 0;
+            font-size: 0.8rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .calendar-day:hover { background-color: #e9ecef; }
+        .calendar-day.current { background-color: var(--accent-color); color: var(--left-color); font-weight: 500; }
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+        }
+        .calendar-day.current.has-event::after { background-color: var(--left-color); }
+
+        .upcoming-events { margin-top: 15px; }
+        .event-item { display: flex; gap: 10px; padding: 10px; border-radius: 5px; background-color: white; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .event-color { width: 12px; border-radius: 3px; }
+        .event-interview { background-color: var(--accent-color); }
+        .event-deadline { background-color: #dc3545; }
+        .event-details { flex: 1; }
+        .event-title { font-size: 0.85rem; font-weight: 500; color: #333; margin-bottom: 2px; }
+        .event-time { font-size: 0.75rem; color: #6c757d; }
+
+        .view-more-btn {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .view-more-btn a {
+            color: var(--left-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .view-more-btn a i {
+            margin-right: 5px;
+        }
+
+        .view-more-btn a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Skills Progress Section */
+        .skills-progress {
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .skills-progress h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .skill-item {
+            margin-bottom: 15px;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .skill-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .skill-level {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: var(--accent-color);
+        }
+
+        .skill-web { width: 85%; }
+        .skill-ui { width: 70%; }
+        .skill-js { width: 65%; }
+        .skill-react { width: 60%; }
+
+        .skill-suggestion {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .suggestion-title {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-courses {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .course-badge {
+            padding: 5px 10px;
+            background-color: #e9ecef;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #555;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .course-badge:hover {
+            background-color: var(--accent-color);
+            color: var(--left-color);
+        }
+
+        #searchdiv{
+            width: 100%;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .home-container {
+                flex-direction: column;
+            }
+            
+            #leftsidehome, #rightsidehome {
+                width: 100%;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+
+            .internship-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-dropdown select {
+                width: 100%;
+            }
+            
+            .filter-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .internship-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .internship-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-wrapper {
+                border-radius: 8px;
+            }
+            
+            .search-tags {
+                justify-content: center;
+                padding: 0 10px;
+            }
+        }
+
+        /* Improved Qualification Table CSS */
+        .qualification-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .qualification-table th,
+        .qualification-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            white-space: nowrap;
+            word-wrap: break-word;
+        }
+
+        .qualification-table th {
+            background-color: var(--left-color);
+            color: var(--right-color);
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .qualification-table tr {
+            display: table-row;
+        }
+
+        .qualification-table td {
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+
+        .qualification-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .qualification-table tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        .qualification-table .btn-update {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .qualification-table .btn-update:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .qualification-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .qualification-table th,
+            .qualification-table td {
+                min-width: 120px;
+            }
+        }
+
+        /* Wrap for horizontal scrolling */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+
+        /* Qualification Table Styles */
+        .qualification-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px; /* Force wider table */
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="menu-toggle">
+        <span></span>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Student Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ applicant_name }}</h4>
+                <p>Computer Science Student</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{url_for('applicant_dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="applications.html"><i class="fas fa-clipboard-list"></i> My Applications</a>
+            <a href="{{ url_for('applicant_profile') }}"><i class="fas fa-user"></i> My Profile</a>
+            <a href="profile.html"><i class="fa fa-briefcase"></i> In field internships</a>
+            <a href="{{url_for('applicant_myqualifications')}}"><i class="fa fa-graduation-cap"></i> My Qualifications</a>
+            <a href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+    </div>
+
+    <div class="background-split">
+        <div class="left-side">
+            <div class="logoimage">
+                <img src="biglogo.png" alt="Student Logo">
+            </div>
+        </div>
+        
+        <div class="right-side">
+            <main class="body">
+                <div class="content">
+                    <div class="heading">
+                        <div>
+                            <h2>Student Dashboard - <span id="xtern">Xtern</span></h2>
+                        </div>
+                    </div>
+                    
+                    <!-- Search bar section -->
+                    <div id="searchdiv">
+                        <div class="search-container">
+                            
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Two-column layout container -->
+                    <div class="home-container">
+                        <!-- Left Side of Homepage -->
+                        <div id="leftsidehome">
+                            <h3>My Qualifications</h3>
+
+                            {% if qualification %}
+                                <div class="table-responsive">
+                                    <table class="qualification-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Degree</th>
+                                                <th>Year</th>
+                                                <th>Board/University</th>
+                                                <th>Percentage</th>
+                                                <th>Main Subjects</th>
+                                                <th>Sub Subjects</th>
+                                                <th>Skills</th>
+                                                <th>Interest</th>
+                                                <th>Institute</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ qualification.degree_name }}</td>
+                                                <td>{{ qualification.year }}</td>
+                                                <td>{{ qualification.board }}</td>
+                                                <td>{{ qualification.percentage }}%</td>
+                                                <td>{{ qualification.main_subjects }}</td>
+                                                <td>{{ qualification.sub_subjects }}</td>
+                                                <td>{{ qualification.skills }}</td>
+                                                <td>{{ qualification.interest }}</td>
+                                                <td>{{ qualification.institute }}</td>
+                                                <td><a href="{{ url_for('update_qualification') }}" class="btn-update">Update</a></td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <p>No qualification details found. Please add your qualification first.</p>
+                                <a href="{{ url_for('add_qualification') }}" class="btn-update">Add Qualification</a>
+                            {% endif %}
+
+                        </div>
+                        <!-- Right Side of Homepage -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            sidebar.classList.remove('active');
+            menuToggle.classList.remove('active');
+            overlay.classList.remove('active');
+            
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            });
+
+            document.querySelectorAll('.btn-apply').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.internship-card');
+                    const title = card.querySelector('.internship-title').textContent;
+                    alert('Application started for: ' + title);
+                });
+            });
+
+            document.querySelectorAll('.btn-save').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.innerHTML = this.innerHTML === 'Save' ? 'Saved!' : 'Save';
+                    if(this.innerHTML === 'Saved!') {
+                        this.style.backgroundColor = '#14213d';
+                        this.style.color = 'white';
+                    } else {
+                        this.style.backgroundColor = 'transparent';
+                        this.style.color = '#14213d';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.addEventListener('click', function() {
+                    document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('current'));
+                    this.classList.add('current');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

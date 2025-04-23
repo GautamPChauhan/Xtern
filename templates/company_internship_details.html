@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ internship.title }} - Internship Details</title>
+    <style>
+        .internship-detail {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        .internship-detail h2 {
+            margin-bottom: 10px;
+        }
+        .internship-detail .section {
+            margin-bottom: 15px;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="internship-detail">
+        <h2>{{ internship.title }}</h2>
+        <p><strong>Post:</strong> {{ internship.post }}</p>
+        <p><strong>Description:</strong> {{ internship.description }}</p>
+        <p><strong>Duration:</strong> {{ internship.duration }}</p>
+        <p><strong>Stipend:</strong> {{ internship.stipend }}</p>
+        <p><strong>Required Skills:</strong> {{ internship.required_skills }}</p>
+        <p><strong>Main Subjects:</strong> {{ internship.main_subjects }}</p>
+        <p><strong>Minor Subjects:</strong> {{ internship.minor_subjects }}</p>
+        <p><strong>Location:</strong> {{ internship.location }}</p>
+        <p><strong>Remarks:</strong> {{ internship.remarks or 'None' }}</p>
+        <p><strong>Open Date:</strong> {{ internship.open_date }}</p>
+        <p><strong>Close Date:</strong> {{ internship.close_date }}</p>
+        <p><strong>Status:</strong> {{ internship.status }}</p>
+        <p><strong>Job Offer After Internship:</strong> {{ internship.job_offer }}</p>
+
+        <a href="{{ url_for('company_dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

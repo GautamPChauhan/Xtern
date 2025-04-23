@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Qualification - Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        :root {
+            --left-color: #14213d;
+            --right-color: #FFF6E8;
+            --accent-color: #fca311;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--right-color);
+            color: #333;
+        }
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--left-color);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: var(--left-color);
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #e69500;
+        }
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Update Qualification</h2>
+        <form method="POST" action="{{ url_for('update_qualification') }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.degree_name.label }} {{ form.degree_name(value=qualification.degree_name) }}
+            </div>
+            <div class="form-group">
+                {{ form.year.label }} {{ form.year(value=qualification.year) }}
+            </div>
+            <div class="form-group">
+                {{ form.board.label }} {{ form.board(value=qualification.board) }}
+            </div>
+            <div class="form-group">
+                {{ form.percentage.label }} {{ form.percentage(value=qualification.percentage) }}
+            </div>
+            <div class="form-group">
+                {{ form.main_subjects.label }} {{ form.main_subjects(value=qualification.main_subjects) }}
+            </div>
+            <div class="form-group">
+                {{ form.sub_subjects.label }} {{ form.sub_subjects(value=qualification.sub_subjects) }}
+            </div>
+            <div class="form-group">
+                {{ form.skills.label }} {{ form.skills(value=qualification.skills) }}
+            </div>
+            <div class="form-group">
+                {{ form.interest.label }} {{ form.interest(value=qualification.interest) }}
+            </div>
+            <div class="form-group">
+                {{ form.institute.label }} {{ form.institute(value=qualification.institute) }}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="submit-btn") }}
+            </div>
+        </form>
+    </div>
+</body>
+</html>
