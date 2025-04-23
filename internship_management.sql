@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 19, 2025 at 02:55 PM
+-- Generation Time: Apr 23, 2025 at 06:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -72,11 +72,19 @@ CREATE TABLE `applications` (
   `application_id` int(5) NOT NULL,
   `internship_id` int(5) DEFAULT NULL,
   `user_id` int(5) DEFAULT NULL,
+  `applied_on` date NOT NULL,
   `status` varchar(100) DEFAULT 'Pending',
   `remarks` varchar(100) DEFAULT NULL,
   `skill_match_percentage` decimal(5,2) DEFAULT NULL,
   `sms_status` varchar(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `applications`
+--
+
+INSERT INTO `applications` (`application_id`, `internship_id`, `user_id`, `applied_on`, `status`, `remarks`, `skill_match_percentage`, `sms_status`) VALUES
+(1, 1, 6, '2025-04-23', 'Withdrawn', NULL, 18.18, NULL);
 
 -- --------------------------------------------------------
 
@@ -138,6 +146,27 @@ CREATE TABLE `degree` (
   `degree_name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `degree`
+--
+
+INSERT INTO `degree` (`degree_id`, `degree_name`) VALUES
+(1, '10th'),
+(2, '12th'),
+(8, 'B.Com'),
+(9, 'B.Tech'),
+(6, 'BA'),
+(7, 'BBA'),
+(5, 'BCA'),
+(4, 'BSc'),
+(3, 'Diploma'),
+(14, 'M.Com'),
+(15, 'M.Tech'),
+(12, 'MA'),
+(13, 'MBA'),
+(11, 'MCA'),
+(10, 'MSc');
+
 -- --------------------------------------------------------
 
 --
@@ -170,7 +199,7 @@ CREATE TABLE `internship` (
   `required_skills` text NOT NULL,
   `main_subjects` text NOT NULL,
   `minor_subjects` text NOT NULL,
-  `stipend` varchar(7) NOT NULL,
+  `stipend` varchar(15) NOT NULL,
   `location` varchar(100) NOT NULL,
   `remarks` text NOT NULL,
   `internship_status` varchar(6) NOT NULL,
@@ -179,6 +208,13 @@ CREATE TABLE `internship` (
   `status` varchar(5) NOT NULL,
   `job_offer` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `internship`
+--
+
+INSERT INTO `internship` (`internship_id`, `company_id`, `title`, `post`, `description`, `duration`, `required_skills`, `main_subjects`, `minor_subjects`, `stipend`, `location`, `remarks`, `internship_status`, `open_date`, `close_date`, `status`, `job_offer`) VALUES
+(1, 1, 'Software Development Intern', 'Full Stack Developer Intern', 'Join our development team to build scalable web applications using modern technologies. You’ll be working under experienced mentors and will contribute to real-time projects.', '3 months', 'HTML, CSS, JavaScript, React.js, Node.js, MySQL\r\n', 'Web Development, Software Engineering, Database Systems\r\n', 'UI/UX Design, Cloud Computing', '8000/month', 'Ahmedabad, Gujarat', 'Remote work option available; high-performing interns may be offered a full-time position.', 'Open', '2025-04-22', '2025-05-10', 'Open', 'Yes');
 
 -- --------------------------------------------------------
 
@@ -199,6 +235,13 @@ CREATE TABLE `user_qualification` (
   `interest` text DEFAULT NULL,
   `institute` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_qualification`
+--
+
+INSERT INTO `user_qualification` (`qualification_id`, `user_id`, `degree_id`, `year`, `board`, `percentage`, `main_subjects`, `sub_subjects`, `skills`, `interest`, `institute`) VALUES
+(1, 6, 1, '2020', 'Gujarat Board', 77.00, 'Maths,Science,English', 'Computer,English', 'HTML,CSS,Python', 'Python Developer', 'Don Bosco English School');
 
 --
 -- Indexes for dumped tables
@@ -289,7 +332,7 @@ ALTER TABLE `applicant`
 -- AUTO_INCREMENT for table `applications`
 --
 ALTER TABLE `applications`
-  MODIFY `application_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `application_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `company`
@@ -307,7 +350,7 @@ ALTER TABLE `company_address`
 -- AUTO_INCREMENT for table `degree`
 --
 ALTER TABLE `degree`
-  MODIFY `degree_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `degree_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `feedback`
@@ -319,13 +362,13 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `internship`
 --
 ALTER TABLE `internship`
-  MODIFY `internship_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `internship_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_qualification`
 --
 ALTER TABLE `user_qualification`
-  MODIFY `qualification_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `qualification_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
