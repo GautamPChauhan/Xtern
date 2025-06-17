@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Posted Internships</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+:root{
+    --left-color:#14213d;
+    --right-color:#ffffffdf;
+    --bg-color:#F3F3E0;
+    --text-color:#444;
+    --sidebar-width: 350px;
+    --accent-color: #fca311;
+    --success-color: #4CAF50;
+    --info-color: #2196F3;
+    --warning-color: #FFC107;
+    --danger-color: #F44336;
+    --secondary-color: #9E9E9E;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --card-radius: 12px;
+    --transition: 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    margin-left: var(--sidebar-width);
+    background-color: var(--bg-color);
+    padding: 20px;
+    color: var(--text-color);
+}
+
+.content {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.inside-heading{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Enhanced Heading section */
+.heading {
+    width: 100%;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.content h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: var(--left-color);
+    font-weight: 700;
+    text-align: center;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Creative decorative line below heading */
+.content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(135deg, var(--accent-color), #ffb347);
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(252, 163, 17, 0.3);
+}
+
+/* Additional decorative elements */
+.content h2::before {
+    content: '⚡';
+    position: absolute;
+    left: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: var(--accent-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(-50%) scale(1.1);
+    }
+}
+
+
+#xtern {
+    color: #04236a;
+}
+
+/* Enhanced Internship Table Styles */
+.internship-table {
+    width: 100%;
+   
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.internship-table thead {
+    background: linear-gradient(135deg, var(--left-color), #1e2a4a);
+    color: white;
+}
+
+.internship-table th {
+    padding: 24px 20px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.internship-table td {
+    padding: 40px 40px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    vertical-align: middle;
+    height: 60px;
+}
+
+.internship-table tbody tr {
+    transition: var(--transition);
+    background: white;
+    height: 60px;
+}
+
+.internship-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.internship-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.action-buttons a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.action-buttons a:first-child {
+    background: linear-gradient(135deg, var(--info-color), #42a5f5);
+    color: white;
+}
+
+.action-buttons a:first-child:hover {
+    background: linear-gradient(135deg, #1976d2, var(--info-color));
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(33, 150, 243, 0.3);
+}
+
+.action-buttons a.delete {
+    background: linear-gradient(135deg, var(--danger-color), #ef5350);
+    color: white;
+}
+
+.action-buttons a.delete:hover {
+    background: linear-gradient(135deg, #d32f2f, var(--danger-color));
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(244, 67, 54, 0.3);
+}
+
+/* Status Badge Styles */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+    background-color: #e8f5e8;
+    color: var(--success-color);
+    border: 1px solid #c8e6c9;
+}
+
+.status-badge.inactive {
+    background-color: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #ffcc02;
+}
+
+.status-badge.expired {
+    background-color: #ffebee;
+    color: var(--danger-color);
+    border: 1px solid #ffcdd2;
+}
+
+.status-badge.pending {
+    background-color: #e3f2fd;
+    color: var(--info-color);
+    border: 1px solid #bbdefb;
+}
+
+/* Back Button */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--accent-color), #ffb347);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(252, 163, 17, 0.2);
+}
+
+.back-button:hover {
+    background: linear-gradient(135deg, #e8950f, var(--accent-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(252, 163, 17, 0.3);
+    text-decoration: none;
+    color: white;
+}
+
+/* Empty State */
+/* .content p {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+    margin: 40px 0;
+    padding: 40px;
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    border-left: 4px solid var(--accent-color);
+} */
+
+/* Static Vertical Sidebar */
+/* Static Vertical Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1.6rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+}
+
+.overlay {
+    display: none;
+}
+/*Heading modified*/
+/* Page Header */
+        .page-header {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            padding: 30px;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(20, 33, 61, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        .page-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .page-header h1 i {
+            margin-right: 15px;
+            font-size: 2.2rem;
+            vertical-align: middle;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .page-header h1 i {
+                font-size: 1.8rem;
+                margin-right: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 30px 20px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .page-header h1 i {
+                font-size: 1.6rem;
+                margin-right: 10px;
+            }
+            
+            .page-header .subtitle {
+                font-size: 1rem;
+            }
+        }
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        margin-left: 0;
+        padding: 10px;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .menu-toggle {
+        display: block;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1001;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        background: var(--accent-color);
+        border-radius: 5px;
+        padding: 5px;
+    }
+    
+    .menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        background: white;
+        margin: 3px 0;
+        transition: 0.3s;
+        border-radius: 1px;
+    }
+    
+    .overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .content h2 {
+        font-size: 32px;
+        margin-top: 60px;
+    }
+    
+    .content h2::before {
+        left: -40px;
+        font-size: 18px;
+    }
+    
+    .internship-table {
+        font-size: 0.8rem;
+    }
+    
+    .internship-table th,
+    .internship-table td {
+        padding: 12px 8px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .action-buttons a {
+        width: 100%;
+        justify-content: center;
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .internship-table {
+        font-size: 0.75rem;
+    }
+    
+    .internship-table th,
+    .internship-table td {
+        padding: 10px 6px;
+    }
+    
+    .content h2 {
+        font-size: 24px;
+    }
+    
+    .content h2::before {
+        display: none;
+    }
+    
+    .home-container {
+        gap: 20px;
+    }
+    
+    .back-button {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Table Responsive Wrapper */
+@media (max-width: 768px) {
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .internship-table {
+        min-width: 600px;
+    }
+}
+
+/* Focus States for Accessibility */
+.action-buttons a:focus,
+.back-button:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Loading Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.internship-table tbody tr {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .action-buttons,
+    .back-button {
+        display: none;
+    }
+    
+    body {
+        margin-left: 0;
+        padding: 0;
+        background: white;
+    }
+    
+    .internship-table {
+        box-shadow: none;
+        border: 1px solid #333;
+    }
+    
+    .content h2 {
+        color: #000;
+    }
+}
+    </style>
+</head>
+<body>
+    
+</body>
+</html>
+
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Company Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ company_name }}</h4>
+                <p>Company Login</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{ url_for('company_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+           <a href="{{ url_for('post_internship') }}"><i class="fas fa-briefcase"></i> Internship Creation</a>
+            
+            <a href="{{ url_for('company_profile') }}"><i class="fas fa-user-tie"></i> Profile</a>
+            <a href="{{ url_for('company_feedback') }}"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="{{ url_for('company_analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+
+        </nav>
+    </div>
+        <main class="body">
+                <div class="content">
+                   <div class="home-container">
+                     <div class="page-header">
+                        <h1><i class="fa-solid fa-file-lines"></i>Internship Details</h1>
+                        <p class="subtitle">All Internships Posted by You</p>
+                    </div>
+
+    {% if internships %}
+    <table class="internship-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Post</th>
+                <th>Open Date</th>
+                <th>Close Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for internship in internships %}
+            <tr>
+                <td>{{ internship.title }}</td>
+                <td>{{ internship.post }}</td>
+                <td>{{ internship.open_date }}</td>
+                <td>{{ internship.close_date }}</td>
+                <td>{{ internship.internship_status }}</td>
+                <td class="action-buttons">
+                    <a href="{{ url_for('edit_internship', internship_id=internship.internship_id) }}">Update</a>
+                    <a href="{{ url_for('delete_internship', internship_id=internship.internship_id) }}" class="delete" onclick="return confirm('Are you sure you want to delete this internship?');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p style="text-align:center;">You haven’t posted any internships yet.</p>
+    {% endif %}
+
+    <div style="text-align:center;">
+        <a href="{{ url_for('company_dashboard') }}" class="back-button">← Back to Dashboard</a>
+    </div>
+                  
+                    
+                    
+                    </div>
+                </div>
+        </main>
+
+    
+
+    
+
+    
+</body>
+</html>

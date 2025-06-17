@@ -1,0 +1,81 @@
+<!-- Search Input -->
+<input
+  type="text"
+  id="search-box"
+  placeholder="Search internships or companies..."
+  autocomplete="off"
+  style="width: 300px; padding: 8px; box-sizing: border-box;"
+>
+
+<!-- Suggestions container -->
+<div id="suggestions" class="suggestion-box" style="display:none;"></div>
+
+<!-- Styles -->
+<style>
+  .suggestion-box {
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    position: absolute;
+    z-index: 1000;
+    width: 300px;
+    box-sizing: border-box;
+  }
+
+  .suggestion-box div {
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  .suggestion-box div:hover {
+    background: #f0f0f0;
+  }
+</style>
+
+<!-- Script -->
+<script>
+  const searchBox = document.getElementById("search-box");
+  const suggestionBox = document.getElementById("suggestions");
+
+  searchBox.addEventListener("input", function () {
+    const query = this.value.trim();
+
+    if (query.length >= 2) {
+      fetch(`/search_suggestions?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+          suggestionBox.innerHTML = '';
+
+          if (data.results.length === 0) {
+            suggestionBox.style.display = 'none';
+            return;
+          }
+
+          data.results.forEach(item => {
+            const div = document.createElement('div');
+            div.textContent = item.label;
+            div.onclick = () => {
+              window.location.href = item.url; // Redirect to company/internship page
+            };
+            suggestionBox.appendChild(div);
+          });
+
+          suggestionBox.style.display = 'block';
+        })
+        .catch(() => {
+          suggestionBox.style.display = 'none';
+        });
+    } else {
+      suggestionBox.style.display = 'none';
+      suggestionBox.innerHTML = '';
+    }
+  });
+
+  // Optional: Hide suggestions when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!suggestionBox.contains(event.target) && event.target !== searchBox) {
+      suggestionBox.style.display = 'none';
+    }
+  });
+</script>

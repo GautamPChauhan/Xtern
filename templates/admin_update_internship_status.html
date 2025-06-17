@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management System - Update Internship Status</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        :root {
+            --left-color: #14213d;
+            --right-color: #F3F3E0;
+            --text-color: #444;
+            --sidebar-width: 350px;
+            --accent-color: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: var(--right-color);
+            min-height: 100vh;
+            color: var(--text-color);
+            padding: 20px;
+            overflow-x: hidden;
+            margin-left: var(--sidebar-width); /* Offset for static sidebar */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0; /* Always visible */
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 8px;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Main Content */
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px;
+            width: 100%;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Heading */
+        .heading {
+            width: 100%;
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(20, 33, 61, 0.3);
+            text-align: center;
+            margin: 20px 0 40px;
+            padding: 40px 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .heading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        .heading h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .heading #xtern {
+            color: var(--accent-color);
+        }
+
+        /* Notification */
+        .notification {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Internship Section */
+        .internship-section {
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(20, 33, 61, 0.05);
+        }
+
+        .internship-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20px;
+            width: 100px;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(252, 163, 17, 0.03), transparent);
+            transform: rotate(-15deg);
+            z-index: 1;
+        }
+
+        .internship-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .internship-section h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--left-color);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .internship-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), #ffcc4d);
+            border-radius: 2px;
+        }
+
+        /* Internship Listings */
+        .internship-listing {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 25px;
+            text-align: left;
+            border: 1px solid rgba(20, 33, 61, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0;
+        }
+
+        .internship-listing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-color), #ffcc4d);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .internship-listing:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .internship-listing:hover::before {
+            opacity: 1;
+        }
+
+        .internship-header {
+            background: linear-gradient(135deg, var(--left-color), #1a2b4d);
+            color: white;
+            padding: 15px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .internship-details {
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+        }
+
+        .internship-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-item i {
+            margin-right: 10px;
+            color: var(--accent-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .stat-item strong {
+            color: var(--left-color);
+            margin-right: 5px;
+        }
+
+        /* Back Button */
+        .back-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .back-button a {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--left-color), #1a2b4d);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .back-button a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(20, 33, 61, 0.3);
+            background: linear-gradient(135deg, var(--accent-color), #ffcc4d);
+        }
+
+        /* No Data Message */
+        .no-data-message {
+            text-align: center;
+            color: #888;
+            font-size: 1.1rem;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(252, 163, 17, 0.05), rgba(252, 163, 17, 0.02));
+            border-radius: 12px;
+            border: 2px dashed rgba(252, 163, 17, 0.3);
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .no-data-message i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            opacity: 0.7;
+            color: var(--accent-color);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            body {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .heading {
+                padding: 30px 20px;
+            }
+
+            .heading h2 {
+                font-size: 2rem;
+            }
+
+            .internship-section {
+                padding: 20px;
+            }
+
+            .internship-details {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .heading {
+                padding: 20px 15px;
+            }
+
+            .heading h2 {
+                font-size: 1.8rem;
+            }
+
+            .internship-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="user-details">
+                <h4>Admin User</h4>
+                <p>System Administrator</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{url_for('admin_dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{url_for('view_companies')}}"><i class="fas fa-building"></i> Approved Companies</a>
+            <a href="{{url_for('pending_companies')}}"><i class="fas fa-check-circle"></i> Pending Companies</a>
+            <a href="{{url_for('admin_feedback')}}"><i class="fas fa-comment-dots"></i> View Feedback</a>
+            <a href="{{url_for('admin_analytics')}}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('admin_reports')}}"><i class="fas fa-file-alt"></i> Reports</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+    </div>
+
+    <main class="body">
+        <div class="content">
+            <div class="heading">
+                <h2>Update Internship Status - <span id="xtern">Xtern</span></h2>
+            </div>
+
+            {% if error %}
+            <div class="notification error">
+                <p>{{ error }}</p>
+            </div>
+            {% elif message %}
+            <div class="notification success">
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+
+            <div class="internship-section">
+                <h3>Closed Internships</h3>
+                {% if closed_internships %}
+                    {% for internship in closed_internships %}
+                    <div class="internship-listing">
+                        <div class="internship-header">
+                            <span>{{ internship.title }}</span>
+                            <span>Closed</span>
+                        </div>
+                        <div class="internship-details">
+                            <div class="internship-stats">
+                                <div class="stat-item"><i class="fas fa-id-badge"></i><strong>ID:</strong> {{ internship.internship_id }}</div>
+                                <div class="stat-item"><i class="fas fa-building"></i><strong>Company:</strong> {{ internship.company_name }}</div>
+                                <div class="stat-item"><i class="fas fa-calendar"></i><strong>Close Date:</strong> {{ internship.close_date }}</div>
+                                <div class="stat-item"><i class="fas fa-calendar-alt"></i>< galactic:start_date><strong>Start Date:</strong> {{ internship.open_date or 'N/A' }}</div>
+                                <div class="stat-item"><i class="fas fa-clock"></i><strong>Duration:</strong> {{ internship.duration or 'N/A' }}</div>
+                                <div class="stat-item"><i class="fas fa-map-marker-alt"></i><strong>Location:</strong> {{ internship.location or 'N/A' }}</div>
+                                <div class="stat-item"><i class="fas fa-briefcase"></i><strong>Job Offer:</strong> {{ internship.type or 'N/A' }}</div>
+                                <div class="stat-item"><i class="fas fa-info-circle"></i><strong>Status:</strong> {{ internship.status }}</div>
+                                <div class="stat-item"><i class="fas fa-info-circle"></i><strong>Internship Status:</strong> {{ internship.internship_status }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-data-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>No internships have been closed.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="back-button">
+                <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

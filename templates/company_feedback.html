@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Feedback - Xtern</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        :root {
+            --left-color: #14213d;
+            --right-color: #ffffffdf;
+            --bg-color: #F3F3E0;
+            --text-color: #444;
+            --sidebar-width: 350px;
+            --accent-color: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Static Vertical Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1.6rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            min-height: 100vh;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(20, 33, 61, 0.2);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header h1 i {
+            margin-right: 10px;
+        }
+
+        .page-header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Feedback Container */
+        .feedback-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Error Message */
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+        }
+
+        /* Feedback Type Selection */
+        .feedback-type {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .feedback-type h3 {
+            color: var(--left-color);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option label {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--left-color);
+            font-weight: 600;
+        }
+
+        .radio-option label i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--left-color);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+            background: white;
+            color: var(--text-color);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: auto;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+
+        .star-rating input[type="radio"]:checked + label,
+        .star-rating label:hover {
+            color: var(--accent-color);
+        }
+
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(20, 33, 61, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Form Visibility */
+        .hidden {
+            display: none;
+        }
+
+        form {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Feedback Received Section */
+        .feedback-received {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            
+            margin: 25px auto 0;
+        }
+
+        .feedback-received h2 {
+            color: var(--left-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .feedback-received h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-color);
+            margin: 8px auto;
+        }
+
+        .feedback-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-color);
+            transition: transform 0.3s ease;
+        }
+
+        .feedback-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feedback-intern {
+            font-weight: 600;
+            color: var(--left-color);
+            font-size: 1.1rem;
+        }
+
+        .feedback-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .feedback-rating {
+            margin-bottom: 10px;
+        }
+
+        .feedback-rating .star {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .feedback-rating .star-empty {
+            color: #ddd;
+        }
+
+        .feedback-text {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .no-feedback {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #e9ecef;
+            color: #666;
+        }
+
+        .no-feedback i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--left-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .overlay {
+                display: block;
+            }
+            
+            .feedback-container {
+                padding: 20px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .star-rating label {
+                font-size: 1.5rem;
+            }
+            
+            .feedback-received {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .feedback-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Company Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ company_name }}</h4>
+                <p>Company Login</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{ url_for('company_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('post_internship') }}"><i class="fas fa-briefcase"></i> Internship Creation</a>
+            <a href="{{ url_for('company_profile') }}"><i class="fas fa-user-tie"></i> Profile</a>
+            <a href="{{ url_for('company_feedback') }}"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="{{ url_for('company_analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-comments"></i> Feedback</h1>
+            <p class="subtitle">Share your experience and help us improve</p>
+        </div>
+
+        <div class="feedback-container">
+            {% if error %}
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <div class="feedback-type">
+                <h3>What would you like to provide feedback about?</h3>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="xtern-feedback" name="feedbackType" value="xtern" checked onclick="toggleForm()">
+                        <label for="xtern-feedback">
+                            <i class="fas fa-laptop-code"></i>
+                            Xtern Platform
+                        </label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="intern-feedback" name="feedbackType" value="intern" onclick="toggleForm()">
+                        <label for="intern-feedback">
+                            <i class="fas fa-user-graduate"></i>
+                            Intern
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <form id="xternFeedbackForm" action="/company/feedback" method="POST">
+                <input type="hidden" name="feedback_type" value="xtern">
+                <div class="form-group">
+                    <label for="xternFeedbackText">
+                        <i class="fas fa-edit"></i> Your Feedback
+                    </label>
+                    <textarea id="xternFeedbackText" name="feedback_text" required 
+                              placeholder="Tell us about your experience with the Xtern platform. What did you like? What could be improved?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-star"></i> Overall Rating
+                    </label>
+                    <div class="star-rating">
+                        {% for i in range(1, 6) %}
+                        <input type="radio" id="xternRating{{i}}" name="rating" value="{{i}}" required>
+                        <label for="xternRating{{i}}">★</label>
+                        {% endfor %}
+                    </div>
+                    <div class="rating-labels">
+                        <span>Poor</span>
+                        <span>Excellent</span>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </form>
+
+            <form id="internFeedbackForm" class="hidden" action="/company/feedback" method="POST">
+                <input type="hidden" name="feedback_type" value="intern">
+                <div class="form-group">
+                    <label for="internSelect">
+                        <i class="fas fa-user-graduate"></i> Select Intern
+                    </label>
+                    <select id="internSelect" name="user_id" required>
+                        <option value="" disabled selected>Choose an intern you've worked with...</option>
+                        {% for intern in interns %}
+                        <option value="{{ intern.user_id }}">{{ intern.fname }} {{ intern.lname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="internFeedbackText">
+                        <i class="fas fa-edit"></i> Your Feedback
+                    </label>
+                    <textarea id="internFeedbackText" name="feedback_text" required 
+                              placeholder="Share your experience working with this intern. How was their performance, attitude, and contribution?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-star"></i> Intern Rating
+                    </label>
+                    <div class="star-rating">
+                        {% for i in range(1, 6) %}
+                        <input type="radio" id="internRating{{i}}" name="rating" value="{{i}}" required>
+                        <label for="internRating{{i}}">★</label>
+                        {% endfor %}
+                    </div>
+                    <div class="rating-labels">
+                        <span>Poor</span>
+                        <span>Excellent</span>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </form>
+        </div>
+
+        <div class="feedback-received">
+            <h2>Feedback from Interns</h2>
+            {% if received_feedback %}
+                {% for feedback in received_feedback %}
+                    <div class="feedback-card">
+                        <div class="feedback-header">
+                            <span class="feedback-intern">{{ feedback.intern_name }}</span>
+                            <span class="feedback-date">{{ feedback.date_given.strftime('%Y-%m-%d') }}</span>
+                        </div>
+                        <div class="feedback-rating">
+                            {% for i in range(1, 6) %}
+                                <span class="star{% if i > feedback.rating %}-empty{% endif %}">★</span>
+                            {% endfor %}
+                        </div>
+                        <p class="feedback-text">{{ feedback.feedback_text }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-feedback">
+                    <i class="fas fa-comment-slash"></i>
+                    <p>No feedback received from interns yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        function toggleForm() {
+            const xternForm = document.getElementById('xternFeedbackForm');
+            const internForm = document.getElementById('internFeedbackForm');
+            const feedbackType = document.querySelector('input[name="feedbackType"]:checked').value;
+
+            if (feedbackType === 'xtern') {
+                xternForm.classList.remove('hidden');
+                internForm.classList.add('hidden');
+            } else {
+                xternForm.classList.add('hidden');
+                internForm.classList.remove('hidden');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const starRatings = document.querySelectorAll('.star-rating');
+            
+            starRatings.forEach(rating => {
+                const stars = rating.querySelectorAll('label');
+                const inputs = rating.querySelectorAll('input[type="radio"]');
+                
+                stars.forEach((star, index) => {
+                    star.addEventListener('mouseenter', () => {
+                        for (let i = 0; i <= index; i++) {
+                            stars[i].style.color = 'var(--accent-color)';
+                        }
+                        for (let i = index + 1; i < stars.length; i++) {
+                            stars[i].style.color = '#ddd';
+                        }
+                    });
+                    
+                    star.addEventListener('mouseleave', () => {
+                        const checkedInput = rating.querySelector('input:checked');
+                        if (checkedInput) {
+                            const checkedIndex = Array.from(inputs).indexOf(checkedInput);
+                            for (let i = 0; i <= checkedIndex; i++) {
+                                stars[i].style.color = 'var(--accent-color)';
+                            }
+                            for (let i = checkedIndex + 1; i < stars.length; i++) {
+                                stars[i].style.color = '#ddd';
+                            }
+                        } else {
+                            stars.forEach(s => s.style.color = '#ddd');
+                        }
+                    });
+                    
+                    star.addEventListener('click', () => {
+                        inputs[index].checked = true;
+                        for (let i = 0; i <= index; i++) {
+                            stars[i].style.color = 'var(--accent-color)';
+                        }
+                        for (let i = index + 1; i < stars.length; i++) {
+                            stars[i].style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+
+            // Sidebar toggle for mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            overlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

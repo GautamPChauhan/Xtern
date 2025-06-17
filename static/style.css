@@ -1,0 +1,156 @@
+/* Navbar Styling */
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        :root {
+            --left-color: #14213d;
+            --right-color: #ffffffdf;
+            --text-color: #444;
+            --gradient: linear-gradient(#c1121f, #780000);
+            --sidebar-width: 250px;
+            --accent-color: #fca311;
+        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #000;
+}
+
+.background-split {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.left-side {
+    width: 60%;
+    background-color: var(--left-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-side {
+    width: 40%;
+    background-color: var(--right-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* Navbar: Positioned in the top-right corner */
+.navbar {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar nav a {
+    font-size: large;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 15px;
+    transition: 0.3s;
+}
+
+.navbar nav a:hover {
+    background-color: #094b63;
+    border-radius: 5px;
+}
+
+/* Main Content: Centered in the right side */
+.body {
+    
+
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    margin: 0; 
+}
+
+
+.content h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.content p {
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons a {
+    padding: 12px 20px;
+    background: #222;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.buttons a:hover {
+    background:  var(--text-color);
+}
+
+
+.content {
+  
+    /* transform: translateY(-50%);
+    width: fit-content;
+    text-align: center;
+    padding: 20px; */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensure inner elements are centered */
+    justify-content: center;
+    width: 100%;
+    max-width: 500px; /* Optional: Limit width for better design */
+}
+#xtern{
+    color: #04236a;
+}
+/* Footer */
+.footer {
+    background: linear-gradient(to right, #000509, #181818);
+    padding: 10px;
+    text-align: center; 
+}
+
+/* Login Button */
+.login-btn {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    overflow: hidden;
+}

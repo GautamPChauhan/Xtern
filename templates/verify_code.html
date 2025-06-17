@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Code - Internship Management System</title>
+    <style>
+        /* Same CSS as forgot_password.html */
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        :root {
+            --left-color: #14213d;
+            --right-color: #ffffffdf;
+            --text-color: #444;
+            --gradient: linear-gradient(#c1121f, #780000);
+            --sidebar-width: 250px;
+            --accent-color: #fca311;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #000;
+        }
+        .background-split {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+        .left-side {
+            width: 60%;
+            background-color: var(--left-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .right-side {
+            width: 40%;
+            background-color: var(--right-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .navbar {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+        }
+        .navbar nav {
+            display: flex;
+            gap: 20px;
+        }
+        .navbar nav a {
+            font-size: large;
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            transition: 0.3s;
+        }
+        .navbar nav a:hover {
+            background-color: var(--text-color);
+            border-radius: 5px;
+        }
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .content {
+            width: 450px;
+            text-align: center;
+            padding: 20px;
+        }
+        .content h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            font-weight: 600;
+            display: block;
+            font-size: 18px;
+            color: black;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            color: black;
+            background: transparent;
+            border: 2px solid #444;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #0057b3;
+            box-shadow: 0 0 8px rgba(0, 180, 216, 0.8);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            color: #fff;
+            background: linear-gradient(90deg, #04236a, #0057b3);
+            border: none;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #0057b3, #04236a);
+            transform: scale(1.05);
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: block;
+            margin-top: 5px;
+        }
+        @media (max-width: 768px) {
+            .content {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% if code_error %}
+    <script>
+        alert("Invalid or expired verification code. Please try again.");
+    </script>
+    {% endif %}
+
+    <div class="background-split">
+        <div class="left-side">
+            <div class="logoimage"> 
+                <img src="{{ url_for('static', filename='biglogo.png') }}" alt="LOGO">
+            </div>
+        </div>
+
+        <div class="right-side">
+            <header class="navbar">
+                <nav>
+                    <a href="{{ url_for('home') }}">Register</a>
+                    <a href="{{ url_for('login') }}">Login</a>
+                </nav>
+            </header>
+
+            <main class="body">
+                <div class="content">
+                    <h2>Verify Code</h2>
+                    <p>Enter the verification code sent to your email.</p>
+                    <form action="{{ url_for('verify_code') }}" method="POST">
+                        <div class="form-group">
+                            <label for="code">Verification Code</label>
+                            <input type="text" id="code" name="code" required placeholder="Enter the code">
+                            {% if errors and errors.get('code') %}
+                                <span class="error">{{ errors.get('code') }}</span>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit">Verify Code</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

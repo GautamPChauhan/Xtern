@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Analytics - Xtern</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+:root{
+    --left-color:#14213d;
+    --right-color:#ffffffdf;
+    --bg-color:#F3F3E0;
+    --text-color:#444;
+    --sidebar-width: 350px;
+    --accent-color: #fca311;
+    --success-color: #4CAF50;
+    --info-color: #2196F3;
+    --warning-color: #FFC107;
+    --danger-color: #F44336;
+    --secondary-color: #9E9E9E;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --card-radius: 12px;
+    --transition: 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    margin-left: var(--sidebar-width);
+    background-color: var(--bg-color);
+    padding: 15px;
+    color: var(--text-color);
+}
+
+.content {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.inside-heading{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Heading section */
+       .page-header {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            padding: 40px 30px;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(20, 33, 61, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 30px 20px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .page-header .subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        
+
+/* Analytics Container */
+.analytics-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Analytics Overview - Statistics Cards */
+.analytics-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-box {
+    background: white;
+    border-radius: var(--card-radius);
+    padding: 15px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition);
+    border-left: 3px solid var(--accent-color);
+}
+
+.stat-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-color), #ffb347);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--left-color);
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Charts Container */
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.chart-box {
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.chart-box:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.chart-header {
+    background: linear-gradient(135deg, var(--left-color), #1e2a4a);
+    color: white;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-header h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.chart-body {
+    padding: 18px;
+    height: 220px;
+    position: relative;
+}
+
+.chart-body canvas {
+    max-width: 100%;
+    height: 100%;
+}
+
+/* Analytics Table */
+.analytics-table-container {
+    width: 100%;
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.analytics-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.analytics-table thead {
+    background: linear-gradient(135deg, var(--left-color), #1e2a4a);
+    color: white;
+}
+
+.analytics-table th,
+.analytics-table td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.analytics-table th {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.analytics-table tbody tr {
+    transition: var(--transition);
+}
+
+.analytics-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.analytics-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.status-badge.active {
+    background-color: #e8f5e8;
+    color: var(--success-color);
+}
+
+.status-badge.inactive {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.status-badge.expired {
+    background-color: #ffebee;
+    color: var(--danger-color);
+}
+
+.status-badge.pending {
+    background-color: #e3f2fd;
+    color: var(--info-color);
+}
+
+/* View Button */
+.view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, var(--accent-color), #ffb347);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.view-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(252, 163, 17, 0.3);
+    text-decoration: none;
+    color: white;
+}
+
+.view-btn i {
+    font-size: 0.7rem;
+}
+
+/* Static Vertical Sidebar */
+/* Static Vertical Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1.6rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+
+/* Loading States */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #666;
+}
+
+.loading::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        margin-left: 0;
+        padding: 10px;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .menu-toggle {
+        display: block;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1001;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    
+    .menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        background: var(--left-color);
+        margin: 6px 0;
+        transition: 0.3s;
+    }
+    
+    .overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .analytics-overview {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-box {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .stat-number {
+        font-size: 1.4rem;
+    }
+    
+    .charts-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .chart-body {
+        height: 180px;
+        padding: 15px;
+    }
+    
+    .analytics-table th,
+    .analytics-table td {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .content h2 {
+        font-size: 22px;
+    }
+    
+    .heading {
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+    
+    .analytics-overview {
+        gap: 8px;
+    }
+    
+    .stat-box {
+        padding: 10px;
+        gap: 8px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .stat-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.2rem;
+    }
+    
+    .chart-body {
+        height: 160px;
+        padding: 12px;
+    }
+    
+    .charts-container {
+        gap: 12px;
+    }
+    
+    .chart-header {
+        padding: 10px 15px;
+    }
+    
+    .chart-header h3 {
+        font-size: 0.85rem;
+    }
+    
+    .analytics-table {
+        font-size: 0.75rem;
+    }
+    
+    .analytics-table th,
+    .analytics-table td {
+        padding: 6px 8px;
+    }
+    
+    .view-btn {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .content h2 {
+        font-size: 20px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar {
+        display: none;
+    }
+    
+    body {
+        margin-left: 0;
+        padding: 0;
+        background: white;
+    }
+    
+    .analytics-container {
+        max-width: none;
+    }
+    
+    .stat-box,
+    .chart-box,
+    .analytics-table-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+    
+    .charts-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .chart-body {
+        height: 250px;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    :root {
+        --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        --bg-color: #ffffff;
+        --text-color: #000000;
+    }
+    
+    .stat-box,
+    .chart-box,
+    .analytics-table-container {
+        border: 2px solid #333;
+    }
+    
+    .analytics-table th,
+    .analytics-table td {
+        border-bottom: 2px solid #333;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .stat-box:hover,
+    .chart-box:hover {
+        transform: none;
+    }
+    
+    .view-btn:hover {
+        transform: none;
+    }
+}
+    </style>
+</head>
+
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Company Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ company_name }}</h4>
+                <p>Company Login</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{ url_for('company_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+              <a href="{{ url_for('post_internship') }}"><i class="fas fa-briefcase"></i> Internship Creation</a>
+            
+            <a href="{{ url_for('company_profile') }}"><i class="fas fa-user-tie"></i> Profile</a>
+            <a href="{{ url_for('company_feedback') }}"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="{{ url_for('company_analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+
+        </nav>
+    </div>
+        <main class="body">
+                <div class="content">
+                   <div class="home-container">
+                                  <main class="analytics-container">
+                <div class="page-header">
+        <h1><i class="fa-solid fa-chart-pie"></i> Company Analytics</h1>
+        <p class="subtitle">Track What Matters Most</p>
+    </div>
+                <div class="analytics-overview">
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.total_internships }}</h3>
+                            <p class="stat-label">Total Internships</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.active_internships }}</h3>
+                            <p class="stat-label">Active Internships</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.total_applications }}</h3>
+                            <p class="stat-label">Total Applications</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.approved_applications }}</h3>
+                            <p class="stat-label">Approved Applications</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.rejected_applications }}</h3>
+                            <p class="stat-label">Rejected Applications</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.pending_applications }}</h3>
+                            <p class="stat-label">Pending Applications</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.avg_skill_match }}%</h3>
+                            <p class="stat-label">Avg. Skill Match</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number">{{ stats.most_applied_internship }}</h3>
+                            <p class="stat-label">Most Applied Internship</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3>Application Status</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="applicationStatusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3>Skill Match Distribution</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="skillMatchChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3>Applications Per Internship</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="applicationsPerInternshipChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3>Monthly Applications Trend</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="monthlyApplicationsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3>Degree-wise Applicant Count</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="degreeCountChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3>State-wise Applicants</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="stateCountChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="analytics-table-container">
+                    <div class="table-responsive">
+                        <table class="analytics-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Applications</th>
+                                    <th>Avg. Skill Match</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    {% if request.args.get('msg') %}
+    <script>
+        alert("{{ request.args.get('msg') }}");
+    </script>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const stats = {{ stats|tojson }};
+            const statusData = {{ application_status|tojson }};
+            const skillData = {{ skill_match|tojson }};
+            const applicationsPerInternship = {{ applications_per_internship|tojson }};
+            const monthlyApplications = {{ monthly_applications|tojson }};
+            const degreeCounts = {{ degree_counts|tojson }};
+            const stateCounts = {{ state_counts|tojson }};
+            const internshipStats = {{ internship_stats|tojson }};
+
+            // Populate statistics
+            populateStatistics(stats);
+            populateInternshipTable(internshipStats);
+            initApplicationStatusChart(statusData);
+            initSkillMatchChart(skillData);
+            initApplicationsPerInternshipChart(applicationsPerInternship);
+            initMonthlyApplicationsChart(monthlyApplications);
+            initDegreeCountChart(degreeCounts);
+            initStateCountChart(stateCounts);
+
+            // Sidebar toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+
+            sidebar.classList.remove('active');
+            menuToggle.classList.remove('active');
+            overlay.classList.remove('active');
+
+            menuToggle.addEventListener('click', function () {
+                this.classList.toggle('active');
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            overlay.addEventListener('click', function () {
+                menuToggle.classList.remove('active');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function () {
+                    menuToggle.classList.remove('active');
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            });
+        });
+
+        function populateStatistics(stats) {
+            const statElements = document.querySelectorAll('.stat-number');
+            if (statElements.length >= 8) {
+                statElements[0].textContent = stats.total_internships;
+                statElements[1].textContent = stats.active_internships;
+                statElements[2].textContent = stats.total_applications;
+                statElements[3].textContent = stats.approved_applications;
+                statElements[4].textContent = stats.rejected_applications;
+                statElements[5].textContent = stats.pending_applications;
+                statElements[6].textContent = stats.avg_skill_match + '%';
+                statElements[7].textContent = stats.most_applied_internship;
+            }
+        }
+
+        function populateInternshipTable(internshipStats) {
+            const tableBody = document.querySelector('.analytics-table tbody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            internshipStats.forEach(internship => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${internship.title}</td>
+                    <td>${internship.applications_count}</td>
+                    <td>${internship.avg_skill_match}%</td>
+                    <td><span class="status-badge ${internship.status.toLowerCase()}">${internship.status}</span></td>
+                    <td><a href="/company/internship/${internship.internship_id}" class="view-btn">
+                        <i class="fas fa-eye"></i> View
+                    </a></td>`;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function initApplicationStatusChart(statusData) {
+            const ctx = document.getElementById('applicationStatusChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusData),
+                    datasets: [{
+                        data: Object.values(statusData),
+                        backgroundColor: ['#4CAF50', '#2196F3', '#F44336', '#9E9E9E', '#FFC107'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { boxWidth: 12, padding: 20, font: { size: 12 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const label = context.label || '';
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total ? Math.round((value / total) * 100) : 0;
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initSkillMatchChart(skillData) {
+            const ctx = document.getElementById('skillMatchChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(skillData),
+                    datasets: [{
+                        label: 'Number of Applicants',
+                        data: Object.values(skillData),
+                        backgroundColor: '#3F51B5',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Number of Applicants' } },
+                        x: { title: { display: true, text: 'Skill Match Percentage' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function initApplicationsPerInternshipChart(data) {
+            const ctx = document.getElementById('applicationsPerInternshipChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.title),
+                    datasets: [{
+                        label: 'Applications',
+                        data: data.map(item => item.count),
+                        backgroundColor: '#4CAF50',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Number of Applications' } },
+                        x: { title: { display: true, text: 'Internship Title' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function initMonthlyApplicationsChart(data) {
+            const ctx = document.getElementById('monthlyApplicationsChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.month),
+                    datasets: [{
+                        label: 'Applications',
+                        data: data.map(item => item.count),
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Applications' } },
+                        x: { title: { display: true, text: 'Month-Year' } }
+                    },
+                    plugins: { legend: { display: true } }
+                }
+            });
+        }
+
+        function initDegreeCountChart(data) {
+            const ctx = document.getElementById('degreeCountChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.degree),
+                    datasets: [{
+                        label: 'Applicants',
+                        data: data.map(item => item.count),
+                        backgroundColor: '#F44336',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Number of Applicants' } },
+                        x: { title: { display: true, text: 'Degree' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function initStateCountChart(data) {
+            const ctx = document.getElementById('stateCountChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.state),
+                    datasets: [{
+                        label: 'Applicants',
+                        data: data.map(item => item.count),
+                        backgroundColor: '#FFC107',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Number of Applicants' } },
+                        x: { title: { display: true, text: 'State' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+                    
+                  
+                    
+                    
+                    </div>
+                </div>
+        </main>
+
+    
+
+    
+
+    
+</body>
+</html>

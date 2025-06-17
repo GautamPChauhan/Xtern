@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management System - Company Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+:root{
+    --left-color:#14213d;
+    --right-color:#ffffffdf;
+    --bg-color:#F3F3E0;
+    --text-color:#444;
+    --sidebar-width: 350px;
+    --accent-color: #fca311;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+     margin-left: var(--sidebar-width);
+    background-color:var(--bg-color);
+     padding: 20px;
+}
+.content {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.home-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+.inside-heading{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+/* Heading section */
+.heading {
+    width: 100%;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.content p {
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+#xtern {
+    color: #04236a;
+}
+/* Static Vertical Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100%;
+    background-color: var(--left-color);
+    z-index: 1000;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+}
+
+.sidebar-header {
+    background-color: var(--accent-color);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-header h3 {
+    color: var(--left-color);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: var(--left-color);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details {
+    text-align: center;
+    color: #fff;
+}
+
+.user-details h4 {
+    margin-bottom: 5px;
+}
+
+.user-details p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.sidebar nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 15px 20px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar nav a i {
+    margin-right: 15px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar nav a:hover {
+    background-color: rgba(255,255,255,0.1);
+    border-left: 4px solid var(--accent-color);
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .body {
+        margin-left: 0;
+        padding: 10px;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .menu-toggle {
+        display: block;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1001;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    
+    .menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        background: var(--left-color);
+        margin: 6px 0;
+        transition: 0.3s;
+    }
+    
+    .overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .left-right-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    #leftsidehome, #rightsidehome {
+        max-width: 100%;
+    }
+    
+    .buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .buttons a {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Company Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ company_name }}</h4>
+                <p>Company Login</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{ url_for('company_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('post_internship') }}"><i class="fas fa-briefcase"></i> Post Internship</a>
+            
+            <a href="{{ url_for('company_profile') }}"><i class="fas fa-user-tie"></i> Profile</a>
+            <a href="{{ url_for('company_feedback') }}"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="{{ url_for('company_analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+
+        </nav>
+    </div>
+        <main class="body">
+                <div class="content">
+                   <div class="home-container">
+                      
+                    
+                  
+                    
+                    
+                    </div>
+                </div>
+        </main>
+
+    
+
+    
+
+    
+</body>
+</html>
+
+/* Modern Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.content h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--dark-primary);
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    position: relative;
+    display: inline-block;
+}
+
+.content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: var(--gray-600);
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+}

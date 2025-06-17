@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Qualification - Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        :root{
+            --left-color:#14213d;
+            --right-color:#ffffffdf;
+            --bg-color:#F3F3E0;
+            --text-color:#444;
+            --sidebar-width: 280px;
+            --accent-color: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            line-height: 1.6;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .user-info {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            margin: 0 auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--left-color);
+        }
+
+        .user-details h4 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .user-details p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+        }
+
+        .sidebar nav {
+            padding: 10px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar nav a.active {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: var(--accent-color);
+        }
+
+        .sidebar nav a i {
+            margin-right: 12px;
+            width: 18px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(20, 33, 61, 0.2);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 i {
+            margin-right: 10px;
+        }
+
+        .page-header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: var(--left-color);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-header h3 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-header h3 i {
+            margin-right: 10px;
+        }
+
+        .form-body {
+            padding: 30px;
+        }
+
+        /* Form Styles */
+        .qualification-form {
+            display: grid;
+            gap: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--left-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: var(--accent-color);
+            width: 16px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: var(--text-color);
+            font-family: "Poppins", sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(252, 163, 17, 0.1);
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Helper Text */
+        .helper-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+        }
+
+        .helper-text i {
+            margin-right: 5px;
+            color: var(--accent-color);
+            font-size: 0.8rem;
+        }
+
+        /* Button Styles */
+        .btn-submit {
+            background: var(--accent-color);
+            color: var(--left-color);
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background: #e8950f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(252, 163, 17, 0.3);
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--left-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .overlay {
+                display: block;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-body {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .form-body {
+                padding: 15px;
+            }
+            
+            .form-row {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="overlay"></div>
+    
+<div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Student Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ applicant_name }}</h4>
+                <p>Intern</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{url_for('applicant_dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{url_for('my_applications')}}"><i class="fas fa-clipboard-list"></i> My Applications</a>
+            <a href="{{url_for('applicant_profile')}}" class="active"><i class="fas fa-user"></i> My Profile</a>
+            <a href="{{url_for('applicant_myqualifications')}}"><i class="fa fa-graduation-cap"></i> My Qualifications</a>
+            <a href="{{ url_for('applicant_feedback') }}"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="{{ url_for('applicant_analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+    </div>
+    
+    <main class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-plus-circle"></i>Add Qualification</h1>
+            <p class="subtitle">Add Your Educational Qualifications and Skills</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-header">
+                <h3><i class="fas fa-graduation-cap"></i>Qualification Details</h3>
+            </div>
+            
+            <div class="form-body">
+                <form method="POST" class="qualification-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                           <label for="degree_id">Select Degree</label>
+                        <select name="degree_id" id="degree_id" required>
+                            <option value="">-- Select Degree --</option>
+                            {% for degree in degrees %}
+                                <option value="{{ degree.degree_id }}">{{ degree.degree_name }}</option>
+                            {% endfor %}
+                        </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="year"><i class="fas fa-calendar-alt"></i> Year</label>
+                            <input type="number" name="year" id="year" min="1900" max="2099" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="board"><i class="fas fa-university"></i> Board/University</label>
+                            <input type="text" name="board" id="board" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="percentage"><i class="fas fa-percentage"></i> Percentage</label>
+                            <input type="number" step="0.01" name="percentage" id="percentage" min="0" max="100" required>
+                            <div class="helper-text">
+                                <i class="fas fa-info-circle"></i>
+                                Enter your percentage (0-100)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="institute"><i class="fas fa-school"></i> Institute Name</label>
+                        <input type="text" name="institute" id="institute" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="main_subjects"><i class="fas fa-book"></i> Main Subjects</label>
+                        <textarea name="main_subjects" id="main_subjects" rows="3" required></textarea>
+                        <div class="helper-text">
+                            <i class="fas fa-lightbulb"></i>
+                            Enter subjects separated by commas (e.g. Mathematics, Physics, Chemistry)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sub_subjects"><i class="fas fa-book-open"></i> Sub Subjects</label>
+                        <textarea name="sub_subjects" id="sub_subjects" rows="3" required></textarea>
+                        <div class="helper-text">
+                            <i class="fas fa-lightbulb"></i>
+                            Enter subjects separated by commas (e.g. Computer Science, English Literature)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="skills"><i class="fas fa-tools"></i> Skills</label>
+                        <textarea name="skills" id="skills" rows="3" required></textarea>
+                        <div class="helper-text">
+                            <i class="fas fa-lightbulb"></i>
+                            Enter skills separated by commas (e.g. Python, Data Analysis, HTML, CSS)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest"><i class="fas fa-heart"></i> Interests</label>
+                        <textarea name="interest" id="interest" rows="2" required></textarea>
+                        <div class="helper-text">
+                            <i class="fas fa-lightbulb"></i>
+                            Enter interests separated by commas (e.g. Artificial Intelligence, Robotics, UI Design)
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Submit Qualification
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Mobile menu toggle
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close sidebar when clicking nav links on mobile
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

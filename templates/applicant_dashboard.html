@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management System - Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        :root{
+            --left-color:#14213d;
+            --right-color:#ffffffdf;
+            --bg-color:#F3F3E0;
+            --text-color:#444;
+            --sidebar-width: 280px;
+            --accent-color: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            line-height: 1.6;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .user-info {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            margin: 0 auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--left-color);
+        }
+
+        .user-details h4 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .user-details p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+        }
+
+        .sidebar nav {
+            padding: 10px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar nav a i {
+            margin-right: 12px;
+            width: 18px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(20, 33, 61, 0.2);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 i {
+            margin-right: 10px;
+        }
+
+        .page-header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .search-section h3 {
+            color: var(--left-color);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-section h3 i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-form select,
+        .search-form input {
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-form select {
+            min-width: 130px;
+            background: white;
+            color: var(--text-color);
+        }
+
+        .search-form input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-form select:focus,
+        .search-form input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .search-btn {
+            padding: 12px 20px;
+            background: var(--accent-color);
+            color: var(--left-color);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #e8950f;
+            transform: translateY(-1px);
+        }
+
+        .search-btn.disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .search-tag {
+            padding: 6px 12px;
+            background: #f8f9fa;
+            color: var(--left-color);
+            border-radius: 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .search-tag:hover {
+            background: var(--accent-color);
+            color: var(--left-color);
+            transform: translateY(-1px);
+        }
+
+        /* Skills Selection */
+        .skills-selection {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #e9ecef;
+            display: none;
+        }
+
+        .skills-selection.active {
+            display: block;
+        }
+
+        .skills-selection h4 {
+            color: var(--left-color);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .skills-selection h4 i {
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .skills-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .skills-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .skills-grid::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .skill-item input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: var(--accent-color);
+            width: 16px;
+            height: 16px;
+        }
+
+        .skill-item label {
+            cursor: pointer;
+            text-transform: capitalize;
+        }
+
+        .skills-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Internships Container */
+        .internships-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .internships-header {
+            background: var(--left-color);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .internships-header h3 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .internships-header h3 i {
+            margin-right: 10px;
+        }
+
+        .internships-count {
+            background: var(--accent-color);
+            color: var(--left-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .internships-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        /* Internship Card */
+        .internship-card {
+            border-bottom: 1px solid #ebb468;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .internship-card:hover {
+            background: #fafbfc;
+            box-shadow: inset 4px 0 0 var(--accent-color);
+        }
+
+        .internship-card:last-child {
+            border-bottom: none;
+        }
+
+        .card-header {
+            padding: 20px 25px 15px;
+            cursor: pointer;
+        }
+
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--left-color);
+            margin-bottom: 5px;
+        }
+
+        .company-name {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+
+        .company-name i {
+            margin-right: 5px;
+            color: var(--accent-color);
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-open {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .card-quick-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .quick-info-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .quick-info-item i {
+            margin-right: 5px;
+            color: var(--accent-color);
+            width: 14px;
+        }
+
+        .card-details {
+            padding: 0 25px 20px;
+            display: none;
+        }
+
+        .card-details.active {
+            display: block;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-size: 0.9rem;
+            color: var(--left-color);
+            font-weight: 500;
+        }
+
+        .description {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .btn-primary {
+            background: var(--left-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0d1729;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--accent-color);
+            color: var(--left-color);
+        }
+
+        .btn-success:hover {
+            background: #e8950f;
+            transform: translateY(-1px);
+        }
+
+        .btn-disabled {
+            background: #6c757d;
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-website {
+            background: #17a2b8;
+            color: white;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+
+        .btn-website:hover {
+            background: #138496;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--left-color);
+        }
+
+        .warning-state {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #856404;
+        }
+
+        .warning-state i {
+            font-size: 2.5rem;
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--left-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        /* Custom Scrollbar */
+        .internships-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .internships-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .internships-list::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .skills-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .skills-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .skills-grid::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .overlay {
+                display: block;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-form select,
+            .search-form input {
+                width: 100%;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .search-section {
+                padding: 20px;
+            }
+            
+            .card-header {
+                padding: 15px 20px 10px;
+            }
+            
+            .card-details {
+                padding: 0 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="overlay"></div>
+    
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Student Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ applicant_name }}</h4>
+                <p>Intern</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{url_for('applicant_dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{url_for('my_applications')}}"><i class="fas fa-clipboard-list"></i> My Applications</a>
+            <a href="{{url_for('applicant_profile')}}"><i class="fas fa-user"></i> My Profile</a>
+            <a href="{{url_for('applicant_myqualifications')}}"><i class="fa fa-graduation-cap"></i> My Qualifications</a>
+            <a href="{{ url_for('applicant_feedback') }}"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="{{ url_for('applicant_analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+    </div>
+    
+    <main class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-table-columns"></i>Student Dashboard</h1>
+            <p class="subtitle">Find The Perfect Opportunities</p>
+        </div>
+        
+        <div class="search-section">
+            <h3><i class="fas fa-search"></i>Search Internships</h3>
+            <form action="{{ url_for('search_internships') }}" method="POST" class="search-form" onsubmit="return validateSearchForm()">
+                <select name="search_type" id="search-type" required>
+                    <option value="company" {% if search_type == 'company' %}selected{% endif %}>Company</option>
+                    <option value="skills" {% if search_type == 'skills' %}selected{% endif %}>Skills</option>
+                    <option value="job_role" {% if search_type == 'job_role' %}selected{% endif %}>Job Role</option>
+                </select>
+                <input type="text" name="search_query" id="search-query" placeholder="Enter your search term..." value="{{ search_query or '' }}">
+                <button type="submit" class="search-btn" id="search-btn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+            
+            <div class="skills-selection" id="skills-selection">
+                <h4><i class="fas fa-check-square"></i>Select Skills</h4>
+                <form action="{{ url_for('search_internships') }}" method="POST" class="skills-form" onsubmit="return validateSkillsForm()">
+                    <input type="hidden" name="search_type" value="skills">
+                    <div class="skills-grid">
+                        {% for skill in all_skills %}
+                        <div class="skill-item">
+                            <input type="checkbox" name="selected_skills" value="{{ skill }}"
+                                   id="skill-{{ skill|replace(' ', '-') }}"
+                                   {% if skill in selected_skills %}checked{% endif %}>
+                            <label for="skill-{{ skill|replace(' ', '-') }}">{{ skill|title }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="skills-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                        <button type="button" class="btn btn-success" onclick="clearCheckboxes()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="internships-container">
+            <div class="internships-header">
+                <h3><i class="fas fa-briefcase"></i>Available Internships</h3>
+                <span class="internships-count">{{ internships|length if internships else 0 }} Found</span>
+            </div>
+            
+            <div class="internships-list">
+                {% if has_qualification %}
+                    {% if internships %}
+                        {% for internship in internships %}
+                        <div class="internship-card">
+                            <div class="card-header" onclick="toggleDetails(this)">
+                                <div class="card-title">
+                                    <div>
+                                        <div class="job-title">{{ internship.title }}</div>
+                                        <div class="company-name">
+                                            <i class="fas fa-building"></i>
+                                            {{ internship.company_name }}
+                                        </div>
+                                    </div>
+                                    <span class="status-badge status-open">{{ internship.status }}</span>
+                                </div>
+                                <div class="card-quick-info">
+                                    <div class="quick-info-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ internship.location }}
+                                    </div>
+                                    <div class="quick-info-item">
+                                        <i class="fas fa-clock"></i>
+                                        {{ internship.duration }}
+                                    </div>
+                                    <div class="quick-info-item">
+                                        <i class="fas fa-rupee-sign"></i>
+                                        {{ internship.stipend }}
+                                    </div>
+                                    <div class="quick-info-item">
+                                        <i class="fas fa-calendar"></i>
+                                        Due: {{ internship.close_date.strftime('%d %b %Y') }}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-details">
+                                <div class="description">
+                                    <strong>Job Description:</strong><br>
+                                    {{ internship.description }}
+                                </div>
+                                
+                                <div class="details-grid">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Position</div>
+                                        <div class="detail-value">{{ internship.post }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Required Skills</div>
+                                        <div class="detail-value">{{ internship.required_skills }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Main Subjects</div>
+                                        <div class="detail-value">{{ internship.main_subjects }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Minor Subjects</div>
+                                        <div class="detail-value">{{ internship.minor_subjects }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Duration</div>
+                                        <div class="detail-value">{{ internship.duration }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Stipend</div>
+                                        <div class="detail-value">{{ internship.stipend }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Location</div>
+                                        <div class="detail-value">{{ internship.location }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Start Date</div>
+                                        <div class="detail-value">{{ internship.open_date.strftime('%d %b %Y') }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Application Deadline</div>
+                                        <div class="detail-value">{{ internship.close_date.strftime('%d %b %Y') }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-actions">
+                                    {% if internship.applied %}
+                                        {% if internship.application_status in ['Withdrawn', 'Rejected'] %}
+                                            <form action="{{ url_for('apply_internship', internship_id=internship.internship_id) }}" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-redo"></i> Re-Apply
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <button class="btn btn-disabled" disabled>
+                                                <i class="fas fa-check"></i> Applied ({{ internship.application_status }})
+                                            </button>
+                                        {% endif %}
+                                    {% else %}
+                                        <form action="{{ url_for('apply_internship', internship_id=internship.internship_id) }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-paper-plane"></i> Apply Now
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    <a href="{{ internship.website_url }}" target="_blank" class="btn btn-website">
+                                        <i class="fas fa-external-link-alt"></i> Visit Website
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <h4>No Internships Found</h4>
+                            {% if search_type == 'skills' and not selected_skills %}
+                            <p>Please select at least one skill to find matching internships.</p>
+                            {% else %}
+                            <p>Try adjusting your search criteria or check back later for new opportunities.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="warning-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>Complete Your Profile</h4>
+                        <p>Please add your educational qualifications to view available internships.</p>
+                        <a href="{{ url_for('add_qualification') }}" class="btn btn-primary" style="margin-top: 15px;">
+                            Add Qualifications
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+    
+    {% if request.args.get('msg') %}
+    <script>
+        alert("{{ request.args.get('msg') }}");
+    </script>
+    {% endif %}
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            const searchType = document.querySelector('#search-type');
+            const searchBtn = document.querySelector('#search-btn');
+            const searchQuery = document.querySelector('#search-query');
+            const skillsSelection = document.querySelector('#skills-selection');
+            
+            function toggleSkillsSelection() {
+                if (searchType.value === 'skills') {
+                    skillsSelection.classList.add('active');
+                    searchBtn.classList.add('disabled');
+                    searchBtn.disabled = true;
+                    searchQuery.disabled = true;
+                } else {
+                    skillsSelection.classList.remove('active');
+                    searchBtn.classList.remove('disabled');
+                    searchBtn.disabled = false;
+                    searchQuery.disabled = false;
+                }
+            }
+
+            // Initial check
+            toggleSkillsSelection();
+
+            // Update on change
+            searchType.addEventListener('change', toggleSkillsSelection);
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.search-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const searchType = this.getAttribute('data-type');
+                    const searchValue = this.getAttribute('data-value');
+                    document.querySelector('select[name="search_type"]').value = searchType;
+                    document.querySelector('input[name="search_query"]').value = searchValue;
+                    toggleSkillsSelection();
+                    document.querySelector('.search-form').submit();
+                });
+            });
+
+            // Validate search form
+            function validateSearchForm() {
+                if (searchType.value === 'skills') {
+                    return false; // Prevent submission for skills
+                }
+                if (!searchQuery.value.trim()) {
+                    alert('Please enter a search term.');
+                    return false;
+                }
+                return true;
+            }
+
+            // Validate skills form
+            function validateSkillsForm() {
+                const checkedSkills = document.querySelectorAll('input[name="selected_skills"]:checked');
+                if (checkedSkills.length === 0) {
+                    alert('Please select at least one skill.');
+                    return false;
+                }
+                return true;
+            }
+
+            // Clear checkboxes
+            window.clearCheckboxes = function() {
+                const checkboxes = document.querySelectorAll('.skills-form input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            };
+        });
+        
+        function toggleDetails(header) {
+            const details = header.nextElementSibling;
+            const card = header.closest('.internship-card');
+            
+            details.classList.toggle('active');
+            
+            document.querySelectorAll('.card-details.active').forEach(detail => {
+                if (detail !== details) {
+                    detail.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

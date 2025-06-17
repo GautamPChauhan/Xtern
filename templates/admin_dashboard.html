@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management System - Admin Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        :root {
+            --left-color: #14213d;
+            --right-color: #F3F3E0;
+            --text-color: #444;
+            --sidebar-width: 350px;
+            --accent-color: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: var(--right-color);
+            min-height: 100vh;
+            color: var(--text-color);
+            padding: 20px;
+            margin-left: var(--sidebar-width);
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--left-color);
+        }
+
+        .user-details {
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-details h4 {
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 15px 20px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Main Content */
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Page Header */
+        .page-header {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            padding: 40px 30px;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(20, 33, 61, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        .page-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .page-header h1 i {
+            margin-right: 15px;
+            font-size: 2.2rem;
+            vertical-align: middle;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* Unified Dashboard Section */
+        .dashboard-container {
+            width: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(20, 33, 61, 0.05);
+        }
+
+        .dashboard-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20px;
+            width: 100px;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(252, 163, 17, 0.03), transparent);
+            transform: rotate(-15deg);
+            z-index: 1;
+        }
+
+        .dashboard-container > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .dashboard-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-tab {
+            background: linear-gradient(135deg, white, #fafbfc);
+            color: var(--left-color);
+            font-size: 0.9rem;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(20, 33, 61, 0.05);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .dashboard-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), #ffcc4d);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-tab:hover::before,
+        .dashboard-tab.active::before {
+            transform: scaleX(1);
+        }
+
+        .dashboard-tab:hover,
+        .dashboard-tab.active {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            color: var(--left-color);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .dashboard-content {
+            display: none;
+            width: 100%;
+        }
+
+        .dashboard-content.active {
+            display: block;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--left-color);
+            position: relative;
+            padding-bottom: 12px;
+            letter-spacing: -0.5px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), #ffcc4d);
+            border-radius: 2px;
+        }
+
+        /* Quick Actions Section */
+        .quick-actions {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(252, 163, 17, 0.05), rgba(252, 163, 17, 0.02));
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(252, 163, 17, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-actions::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30px;
+            width: 80px;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(252, 163, 17, 0.08), transparent);
+            transform: rotate(20deg);
+            z-index: 1;
+        }
+
+        .quick-actions > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            height: auto;
+            width: 100%;
+            max-width: 300px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, white, #fafbfc);
+            color: var(--left-color);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(20, 33, 61, 0.05);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), #ffcc4d);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .action-btn:hover::before {
+            transform: scaleX(1);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        }
+
+        .action-btn i {
+            margin-right: 12px;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            min-width: 20px;
+        }
+
+        .action-btn:hover i {
+            color: #e8950f;
+            transform: scale(1.1);
+        }
+
+        /* Feedback Section */
+        .feedback-section {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .feedback-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+
+        .feedback-tab {
+            background: linear-gradient(135deg, white, #fafbfc);
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--left-color);
+            position: relative;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .feedback-tab:hover {
+            color: var(--accent-color);
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .feedback-tab.active {
+            color: var(--left-color);
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .feedback-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), #ffcc4d);
+        }
+
+        .feedback-content {
+            display: none;
+        }
+
+        .feedback-content.active {
+            display: block;
+        }
+
+        .feedback-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 25px;
+            text-align: left;
+            border: 1px solid rgba(20, 33, 61, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .feedback-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-color), #ffcc4d);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feedback-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .feedback-card:hover::before {
+            opacity: 1;
+        }
+
+        .feedback-header {
+            background: linear-gradient(135deg, var(--left-color), #1a2b4d);
+            color: white;
+            padding: 18px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feedback-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feedback-card:hover .feedback-header::before {
+            opacity: 1;
+        }
+
+        .feedback-rating {
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .feedback-rating i {
+            margin-right: 5px;
+            font-size: 0.9rem;
+        }
+
+        .feedback-details {
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .feedback-details p {
+            color: var(--text-color);
+            font-style: italic;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .feedback-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .feedback-meta-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .feedback-meta-item i {
+            margin-right: 5px;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        /* Listing Sections */
+        .listing {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 25px;
+            text-align: left;
+            border: 1px solid rgba(20, 33, 61, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .listing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-color), #ffcc4d);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .listing:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .listing:hover::before {
+            opacity: 1;
+        }
+
+        .listing-header {
+            background: linear-gradient(135deg, var(--left-color), #1a2b4d);
+            color: white;
+            padding: 18px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .listing-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .listing:hover .listing-header::before {
+            opacity: 1;
+        }
+
+        .request-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, var(--accent-color), #ffcc4d);
+            color: var(--left-color);
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(252, 163, 17, 0.3);
+        }
+
+        .listing-details {
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+        }
+
+        .listing-details p {
+            color: var(--text-color);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .listing-details p strong {
+            color: var(--left-color);
+            font-weight: 600;
+        }
+
+        .listing-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(252, 163, 17, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .stat-item i {
+            margin-right: 6px;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            width: 16px;
+            text-align: center;
+        }
+
+        .action-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-approve, .btn-reject {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            max-width: 150px;
+            text-align: center;
+        }
+
+        .btn-approve::before, .btn-reject::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-approve:hover::before, .btn-reject:hover::before {
+            opacity: 1;
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+
+        .btn-reject {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+        }
+
+        .btn-approve:hover, .btn-reject:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(20, 33, 61, 0.3);
+        }
+
+        /* No Data Message */
+        .no-data-message {
+            text-align: center;
+            color: #888;
+            font-size: 1.1rem;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(252, 163, 17, 0.05), rgba(252, 163, 17, 0.02));
+            border-radius: 12px;
+            border: 2px dashed rgba(252, 163, 17, 0.3);
+            position: relative;
+        }
+
+        .no-data-message i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            opacity: 0.7;
+            color: var(--accent-color);
+        }
+
+        .no-data-message p {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Menu Toggle for Mobile */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: var(--left-color);
+            margin: 6px 0;
+            transition: 0.3s;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .overlay.active {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: block;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .page-header h1 i {
+                font-size: 1.8rem;
+                margin-right: 12px;
+            }
+
+            .page-header .subtitle {
+                font-size: 1rem;
+            }
+
+            .dashboard-tabs {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .dashboard-tab {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-btn {
+                width: 100%;
+                max-width: 100%;
+                min-height: 45px;
+                font-size: 0.95rem;
+            }
+
+            .feedback-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .feedback-tab {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .listing-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .listing-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .request-status {
+                align-self: flex-end;
+            }
+
+            .action-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-approve, .btn-reject {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 30px 20px;
+            }
+
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .page-header h1 i {
+                font-size: 1.6rem;
+                margin-right: 10px;
+            }
+
+            .page-header .subtitle {
+                font-size: 1rem;
+            }
+
+            .dashboard-container {
+                padding: 20px;
+            }
+
+            .section-header {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .action-btn i {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-shield" aria-label="User Shield Icon"></i>
+            </div>
+            <div class="user-details">
+                <h4>Admin User</h4>
+                <p>System Administrator</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{url_for('admin_dashboard')}}"><i class="fas fa-tachometer-alt" aria-label="Dashboard Icon"></i> Dashboard</a>
+            <a href="{{url_for('view_companies')}}"><i class="fas fa-building" aria-label="Approved Companies Icon"></i> Approved Companies</a>
+            <a href="{{url_for('pending_companies')}}"><i class="fas fa-check-circle" aria-label="Pending Companies Icon"></i> Pending Companies</a>
+            <a href="{{url_for('admin_feedback')}}"><i class="fas fa-comment-dots" aria-label="View Feedback Icon"></i> View Feedbacks</a>
+            <a href="{{url_for('admin_analytics')}}"><i class="fas fa-chart-line" aria-label="Analytics Icon"></i> Analytics</a>
+            <a href="{{url_for('admin_reports')}}"><i class="fas fa-file-alt" aria-label="Reports Icon"></i> Reports</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt" aria-label="Log Out Icon"></i> Log Out</a>
+        </nav>
+    </div>
+
+    <main class="body">
+        <div class="content">
+            <div class="page-header">
+                <h1><i class="fa-solid fa-table-columns" aria-label="Admin Dashboard Icon"></i>Admin Dashboard</h1>
+                <p class="subtitle">Manage internships, companies, and feedback efficiently</p>
+            </div>
+
+            <div class="dashboard-container">
+                <div class="dashboard-tabs">
+                    <button class="dashboard-tab active" data-target="overview">Overview</button>
+                    <button class="dashboard-tab" data-target="pending-requests">Pending Requests</button>
+                    <button class="dashboard-tab" data-target="companies">Companies</button>
+                    <button class="dashboard-tab" data-target="students">Interns</button>
+                    <button class="dashboard-tab" data-target="feedback">Feedback</button>
+                    <button class="dashboard-tab" data-target="reports">Reports</button>
+                </div>
+
+                <div class="dashboard-content active" id="overview">
+                    <div class="quick-actions">
+                        <h3 class="section-header">Quick Actions</h3>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('admin_update_internship_status') }}" class="action-btn">
+                                <i class="fas fa-sync-alt" aria-label="Update Internships Status Icon"></i> Update Internships Status
+                            </a>
+                        </div>
+                    </div>
+                    <div class="feedback-section">
+                        <h3 class="section-header">Recent Feedback</h3>
+                        <div class="feedback-tabs">
+                            <button class="feedback-tab active" data-target="company-feedback">Company Feedback</button>
+                            <button class="feedback-tab" data-target="student-feedback">Intern Feedback</button>
+                        </div>
+                        <div class="feedback-content active" id="company-feedback">
+                            {% for feedback in company_feedbacks %}
+                            <div class="feedback-card">
+                                <div class="feedback-header">
+                                    <span>{{ feedback.company_name }}</span>
+                                    <span class="feedback-rating">
+                                        {% for i in range(feedback.rating|int) %}
+                                        <i class="fas fa-star" aria-label="Star Rating Icon"></i>
+                                        {% endfor %}
+                                        {% if feedback.rating % 1 != 0 %}
+                                        <i class="fas fa-star-half-alt" aria-label="Half Star Rating Icon"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="feedback-details">
+                                    <p>"{{ feedback.comment }}"</p>
+                                    <div class="feedback-meta">
+                                        <div class="feedback-meta-item"><i class="fas fa-calendar" aria-label="Calendar Icon"></i> {{ feedback.date }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="feedback-content" id="student-feedback">
+                            {% for feedback in student_feedbacks %}
+                            <div class="feedback-card">
+                                <div class="feedback-header">
+                                    <span>{{ feedback.student_name }}</span>
+                                    <span class="feedback-rating">
+                                        {% for i in range(feedback.rating|int) %}
+                                        <i class="fas fa-star" aria-label="Star Rating Icon"></i>
+                                        {% endfor %}
+                                        {% if feedback.rating % 1 != 0 %}
+                                        <i class="fas fa-star-half-alt" aria-label="Half Star Rating Icon"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="feedback-details">
+                                    <p>"{{ feedback.comment }}"</p>
+                                    <div class="feedback-meta">
+                                        <div class="feedback-meta-item"><i class="fas fa-calendar" aria-label="Calendar Icon"></i> {{ feedback.date }}</div>
+                                        <div class="feedback-meta-item"><i class="fas fa-graduation-cap" aria-label="Graduation Cap Icon"></i> {{ feedback.course }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content" id="pending-requests">
+                    <h3 class="section-header">Pending Requests</h3>
+                    {% if pending_companies %}
+                        {% for request in pending_companies %}
+                        <div class="listing">
+                            <div class="listing-header">
+                                <span>{{ request.company_name }}</span>
+                                <span class="request-status">New Listing</span>
+                            </div>
+                            <div class="listing-details">
+                                <p>Request to post new {{ request.industry }} field Internships.</p>
+                                <p><strong>Website:</strong> <a href="{{ request.website_url }}" target="_blank">{{ request.website_url }}</a></p>
+                                <div class="listing-stats">
+                                    <div class="stat-item"><i class="fas fa-tag" aria-label="Industry Tag Icon"></i> {{ request.industry }}</div>
+                                </div>
+                                <div class="action-controls">
+                                    <form method="POST" action="{{ url_for('handle_company_approval', company_id=request.company_id, action='approve') }}">
+                                        <button class="btn-approve" type="submit">Approve</button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('handle_company_approval', company_id=request.company_id, action='reject') }}">
+                                        <button class="btn-reject" type="submit">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data-message">
+                            <i class="fas fa-exclamation-circle" aria-label="No Data Icon"></i>
+                            <p>No pending company requests at the moment.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="dashboard-content" id="companies">
+                    <h3 class="section-header">Approved Companies</h3>
+                    {% if companies %}
+                        {% for company in companies %}
+                        <div class="listing">
+                            <div class="listing-header">
+                                <span>{{ company.company_name }}</span>
+                            </div>
+                            <div class="listing-details">
+                                <div class="listing-stats">
+                                    <div class="stat-item"><i class="fas fa-briefcase" aria-label="Internships Icon"></i> Internships: {{ company.internship_count }}</div>
+                                    <div class="stat-item"><i class="fas fa-file-alt" aria-label="Applications Icon"></i> Total Applications: {{ company.total_applications }}</div>
+                                    <div class="stat-item"><i class="fas fa-check-circle" aria-label="Approved Icon"></i> Approved: {{ company.approved_applications }}</div>
+                                    <div class="stat-item"><i class="fas fa-hourglass-half" aria-label="Pending Icon"></i> Pending: {{ company.pending_applications }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data-message">
+                            <i class="fas fa-building" aria-label="No Companies Icon"></i>
+                            <p>No approved companies found.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="dashboard-content" id="students">
+                    <h3 class="section-header">Students</h3>
+                    {% if students %}
+                        {% for student in students %}
+                        <div class="listing">
+                            <div class="listing-header">
+                                <span>{{ student.student_name }}</span>
+                            </div>
+                            <div class="listing-details">
+                                <div class="listing-stats">
+                                    <div class="stat-item"><i class="fas fa-briefcase" aria-label="Applied Internships Icon"></i> Applied Internships: {{ student.application_count }}</div>
+                                    <div class="stat-item"><i class="fas fa-check-circle" aria-label="Approved Icon"></i> Approved: {{ student.approved_applications }}</div>
+                                    <div class="stat-item"><i class="fas fa-hourglass-half" aria-label="Pending Icon"></i> Pending: {{ student.pending_applications }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data-message">
+                            <i class="fas fa-user-graduate" aria-label="No Interns Icon"></i>
+                            <p>No interns found.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            const dashboardTabs = document.querySelectorAll('.dashboard-tab');
+            const dashboardContents = document.querySelectorAll('.dashboard-content');
+            const feedbackTabs = document.querySelectorAll('.feedback-tab');
+            const feedbackContents = document.querySelectorAll('.feedback-content');
+
+            // Ensure only overview is visible by default
+            dashboardContents.forEach(content => {
+                if (content.id === 'overview') {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+
+            // Ensure company feedback is visible by default
+            feedbackContents.forEach(content => {
+                if (content.id === 'company-feedback') {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+
+            // Ensure company feedback tab is active by default
+            feedbackTabs.forEach(tab => {
+                if (tab.getAttribute('data-target') === 'company-feedback') {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Sidebar toggle functionality
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            // Overlay click to close sidebar
+            overlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+            });
+
+            // Close sidebar when clicking on a nav link
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            });
+
+            // Dashboard tab switching
+            dashboardTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
+
+                    // Handle redirects for Feedback and Reports
+                    if (target === 'feedback') {
+                        window.location.href = "{{ url_for('admin_feedback') }}";
+                        return;
+                    }
+                    if (target === 'reports') {
+                        window.location.href = "{{ url_for('admin_reports') }}";
+                        return;
+                    }
+
+                    // Toggle active class for tabs
+                    dashboardTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Toggle active class for content sections
+                    dashboardContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === target) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Feedback tab switching
+            feedbackTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
+
+                    // Toggle active class for tabs
+                    feedbackTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Toggle active class for content sections
+                    feedbackContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === target) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

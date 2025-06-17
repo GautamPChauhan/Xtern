@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        :root{
+            --left-color:#14213d;
+            --right-color:#ffffffdf;
+            --bg-color:#F3F3E0;
+            --text-color:#444;
+            --sidebar-width: 280px;
+            --accent-color: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            line-height: 1.6;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--left-color);
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            background-color: var(--accent-color);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sidebar-header h3 {
+            color: var(--left-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .user-info {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            margin: 0 auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--left-color);
+        }
+
+        .user-details h4 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .user-details p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+        }
+
+        .sidebar nav {
+            padding: 10px 0;
+        }
+
+        .sidebar nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar nav a.active {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: var(--accent-color);
+        }
+
+        .sidebar nav a i {
+            margin-right: 12px;
+            width: 18px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .sidebar nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--left-color), var(--accent-color));
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(20, 33, 61, 0.2);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 i {
+            margin-right: 10px;
+        }
+
+        .page-header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Applications Container */
+        .applications-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .applications-header {
+            background: var(--left-color);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .applications-header h3 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .applications-header h3 i {
+            margin-right: 10px;
+        }
+
+        .applications-count {
+            background: var(--accent-color);
+            color: var(--left-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .applications-list {
+            padding: 0;
+        }
+
+        /* Application Card */
+        .application-card {
+            border-bottom: 1px solid #f1f3f4;
+            transition: all 0.3s ease;
+        }
+
+        .application-card:hover {
+            background: #fafbfc;
+            box-shadow: inset 4px 0 0 var(--accent-color);
+        }
+
+        .application-card:last-child {
+            border-bottom: none;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .company-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .company-info span {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .company-info i {
+            margin-right: 8px;
+            color: var(--accent-color);
+            width: 16px;
+        }
+
+        .company-info a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .company-info a:hover {
+            color: #0056b3;
+        }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .internship-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--left-color);
+            margin-bottom: 5px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-accepted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-withdrawn {
+            background: #e2e3e5;
+            color: #495057;
+        }
+
+        .application-description {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: #555;
+            line-height: 1.6;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .application-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: var(--left-color);
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .withdraw-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .withdraw-btn:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .btn-disabled {
+            background: #6c757d;
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--left-color);
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background: var(--left-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0d1729;
+            transform: translateY(-1px);
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--left-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .overlay {
+                display: block;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .application-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+            }
+            
+            .company-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .card-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="overlay"></div>
+    
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Student Portal</h3>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="user-details">
+                <h4>{{ applicant_name }}</h4>
+                <p>Intern</p>
+            </div>
+        </div>
+        <nav>
+            <a href="{{url_for('applicant_dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{url_for('my_applications')}}" class="active"><i class="fas fa-clipboard-list"></i> My Applications</a>
+            <a href="{{url_for('applicant_profile')}}"><i class="fas fa-user"></i> My Profile</a>
+            <a href="{{url_for('applicant_myqualifications')}}"><i class="fa fa-graduation-cap"></i> My Qualifications</a>
+            <a href="{{ url_for('applicant_feedback') }}"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="{{ url_for('applicant_analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        </nav>
+    </div>
+    
+    <main class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-clipboard-list"></i>My Applications</h1>
+            <p class="subtitle">Track Your Internship Applications</p>
+        </div>
+        
+        <div class="applications-container">
+            <div class="applications-header">
+                <h3><i class="fas fa-file-alt"></i>Application History</h3>
+                <span class="applications-count">{{ user_applications|length if user_applications else 0 }} Applications</span>
+            </div>
+            
+            <div class="applications-list">
+                {% if user_applications %}
+                    {% for application in user_applications %}
+                        <div class="application-card">
+                            <div class="card-content">
+                                <div class="company-info">
+                                    <span><i class="fas fa-building"></i><strong>Company:</strong> {{ application.company_name }}</span>
+                                    <span><i class="fas fa-globe"></i><strong>Website:</strong> <a href="{{ application.website_url }}" target="_blank">{{ application.website_url }}</a></span>
+                                </div>
+                                
+                                <div class="application-header">
+                                    <div>
+                                        <div class="internship-title">{{ application.internship_title }}</div>
+                                    </div>
+                                    <span class="status-badge status-{{ application.status.lower() }}">{{ application.status }}</span>
+                                </div>
+                                
+                                <div class="application-description">
+                                    <strong>Job Description:</strong><br>
+                                    {{ application.internship_description }}
+                                </div>
+                                
+                                <div class="application-details">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Stipend</div>
+                                        <div class="detail-value">{{ application.stipend }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Duration</div>
+                                        <div class="detail-value">{{ application.duration }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Location</div>
+                                        <div class="detail-value">{{ application.location }}</div>
+                                    </div>
+                                    {% if application.applied_date %}
+                                    <div class="detail-item">
+                                        <div class="detail-label">Applied On</div>
+                                        <div class="detail-value">{{ application.applied_date.strftime('%d %b %Y') if application.applied_date else 'N/A' }}</div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if application.status == 'Pending' %}
+                                    <div class="card-actions">
+                                        <form action="{{ url_for('withdraw_application', application_id=application.application_id) }}" method="POST">
+                                            <button type="submit" class="btn withdraw-btn" onclick="return confirm('Are you sure you want to withdraw this application?')">
+                                                <i class="fas fa-times"></i> Withdraw Application
+                                            </button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h4>No Applications Yet</h4>
+                        <p>You haven't applied to any internships yet. Start exploring opportunities!</p>
+                        <a href="{{ url_for('applicant_dashboard') }}" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Browse Internships
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Mobile menu toggle
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close sidebar when clicking nav links on mobile
+            document.querySelectorAll('.sidebar nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
