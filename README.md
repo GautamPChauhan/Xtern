@@ -79,11 +79,11 @@ xtern/
 ```
 
 
-##✨ Future Work
--Filter and sort internships by location, stipend, etc.
--Add pagination to lists
--Improve mobile responsiveness
+## ✨ Future Work
+- Filter and sort internships by location, stipend, etc.
+- Add pagination to lists
+- Improve mobile responsiveness
 
 
-##🙌 Acknowledgments
--This project was developed as part of my academic coursework to practice full-stack development using Flask and MySQL.
+## 🙌 Acknowledgments
+- This project was developed as part of my academic coursework to practice full-stack development using Flask and MySQL.
