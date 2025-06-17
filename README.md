@@ -66,7 +66,9 @@ flask run
 ```
 
 
-📂 Project Structure
+## 📂 Project Structure
+
+```plaintext
 xtern/
 ├── static/               # Static files (CSS, JS, images)
 ├── templates/            # HTML templates
@@ -74,13 +76,14 @@ xtern/
 ├── models.py             # Database models (if separated)
 ├── requirements.txt      # Python dependencies
 └── README.md             # Project documentation
+```
 
 
-✨ Future Work
-Filter and sort internships by location, stipend, etc.
-Add pagination to lists
-Improve mobile responsiveness
+##✨ Future Work
+-Filter and sort internships by location, stipend, etc.
+-Add pagination to lists
+-Improve mobile responsiveness
 
 
-🙌 Acknowledgments
-This project was developed as part of my academic coursework to practice full-stack development using Flask and MySQL.
+##🙌 Acknowledgments
+-This project was developed as part of my academic coursework to practice full-stack development using Flask and MySQL.
